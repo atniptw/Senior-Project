@@ -1,0 +1,35 @@
+Goals for Meeting 1 (Wednesday Sept 5)
+- Requirements
+	-Uses Cases
+	-User Stories
+		-User can pan, zoom, etc (need to verify what the user should be able to do, and how important each feature is)
+		-Note cards
+	-Specific about map technologies, data format
+	-API version
+	-Define the success of the project
+	
+-Questions
+	-Microsoft Project
+		-Get an explination of what he wants from us
+	-What is expected from our deliverables
+	
+-Roles
+	-Susi
+		-Client Contact
+		-Note taker
+		-View
+	-Sam
+		-Controller
+	-Seth
+		-Model
+	-Tom
+		-Team Lead
+		-ALL THE THINGS
+		
+Email JD.....
+
+-Are we meeting at noon?
+-What medium?
+	-If not here, who is initiating the call?
+-Time length constraint?
+-Who else will be there?
