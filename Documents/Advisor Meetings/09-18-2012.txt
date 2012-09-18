@@ -1,0 +1,23 @@
+ANDROID SITUATIONAL AWARENESS
+September 18, 20124:20 pmWollowski’s OfficeMeeting called by:Dr. WollowskiType of meeting:Advisor MeetingAGENDA ITEMSAdvisor Meeting
+Previous Items* AR: Sam will build an OpenStreetProject Demo
+* AR: Team will ask lots of question at Raytheon on site meeting
+* AR: Tom will talk to Lynn regarding Departure Waivers
+* AR: Tom will create Google Documents for Engineering Journals
+* AR: Seth will contact Google Maps technician, to try and find out if the Google Maps engine is something that we can still use
+
+Current Items
+* Raytheon site meeting
+o Coordinating departure with Alex Mullan’s group
+* Fall deliverables
+o Configuration Management Plan
+o Problem Statement 
+o Project Plan 
+o Metrics 
+o Requirements Document 
+o Requirements Presentation 
+o Initial Architecture Document 
+o Prototype 
+
+Questions
+

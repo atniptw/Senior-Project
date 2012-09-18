@@ -1,0 +1,12 @@
+ANDROID SITUATIONAL AWARENESS
+September 12, 201212:00pmCSSE Conference RoomMeeting called by:Tom AtnipType of meeting:Weekly Client MeetingNote taker:Susi CisnerosAttendees:Tom Atnip, Susi Cisneros, JD Hill, Sam Kim, Seth TroisiAGENDA ITEMS* Project Updates from Raytheon
+* Review On Site Visit
+o Capability Overview, Tour, and Tech Demonstrations
+o Management Introductions and Meet & Greet
+o Android SA Gate 5 Presentation (From team to Raytheon) 
+o Win8 SA Gate 5 Presentation  (From team to Raytheon)
+o Requirements Gathering Workshop. Teams will divide up into two adjacent conference rooms, Raytheon folks will roam back and forth to work with you on your Requirements.
+* Overview of revised Gate 5 PowerPoint
+o Project Milestones with Dates
+* Overview of revised Microsoft Project Chart
+* Questions
