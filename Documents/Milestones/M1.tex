@@ -28,7 +28,15 @@ Tom Atnip, Susi Cisneros, Sam Kim, and Seth Troisi}
 \hline
 13 September 2012 & Document started\\
 \hline
-13 September 2012 & Initial work on document\\
+13 September 2012 & Wrote Requirements and Questions to ask Raytheon\\
+\hline
+20 September 2012 & Created outline\\
+\hline
+20 September 2012 & Wrote Users/Stakeholders section\\
+\hline
+23 September 2012 & Wrote Key Needs, Alternatives, Risks, Documentation Metrics, and Code Metrics\\
+\hline
+24 September 2012 & Updated Requirements as per Gate 5 visit with Raytheon\\
 \hline
 \end{tabular}
 \clearpage
@@ -37,54 +45,140 @@ Tom Atnip, Susi Cisneros, Sam Kim, and Seth Troisi}
 
 \section{Problem Statement}
 \subsection{User/Stakeholder Descriptions}
-\subsubsection{Users}
-\textbf{Soldier, Police Officers, and other Ground Personnel}
+\subsubsection{Users} 
+\textbf{Soldier, Police Officers, and other Ground Personnel}\\
 The users of our program are seeking to maintain their situational awareness in locations which may not have connectivity to the Internet.  Many of them use voice guided situational awareness technology, but in light of advances in mobile devices, they could receive this information in a visual manner.  
 
-subsubsection{Stakeholders}
-\textbf{Raytheon}
-Raytheon's customers are military organizations, many of which are using Raytheon's current situational awareness technologies.  Raytheon is looking to update these technologies to keep their position as a leading provider of military systems.
-
-\textbf{JD Hill}
-JD is the client who proposed this solution.  He is a major proponent of using mobile devices in a military application.
-\textbf{Doug Duesseau}
-Doug is the acting Technical Lead for this project. 
-\textbf{Development Team}
+\subsubsection{Stakeholders}
+\textbf{Raytheon}\\
+Raytheon's customers are mainly military organizations, many of which are using Raytheon's current situational awareness technologies.  Raytheon is looking to update these technologies to keep their position as a leading provider of military systems.\\ \\
+\textbf{JD Hill}\\
+JD is the client who proposed this solution.  He is a major proponent of using mobile devices in a military application.\\ \\
+\textbf{Doug Duesseau}\\
+Doug is the acting Technical Lead for this project. \\ \\
+\textbf{Development Team}\\
 The development team on this project are graduating seniors who wish to learn more about the software development process and interaction with a client.  They are very interested in learning more about developing on the Android platform.
 
 \subsection{Key Needs}
+
+\begin{tabular}{ | p{.5in} | p{4.5in} | }
+\hline
+\textbf{ID} & \textbf{Need}\\
+\hline
+\hline
+N0 & View map of surrounding area\\
+\hline
+N1 & View points of interest on the map\\
+\hline
+N2 & View current location on the map\\
+\hline
+N3 & Map must not require internet access\\
+\hline
+N4 & Map must be Android based\\
+\hline
+N5 & Application must work on any size android device\\
+\hline
+\end{tabular}
+
+
 \subsection{Current Solution}
+
 \subsection{Alternatives}
+All considered solutions to the proposed system require Internet access.
 
+\section{Requirements}
 
-\section{Functional Requirements}
+\subsection{Functional}
 
-\subsection{General}
+\begin{tabular}{ | p{.5in} | p{5in} | }
+\hline
+\textbf{ID} & \textbf{Requirement}\\
+\hline
+\hline
+FR0 & Ability to pan the map by a dragging gesture\\
+\hline
+FR1 & Ability to zoom using double tap, pinch gestures, or using an on-screen button\\
+\hline
+FR2 & Display map tiles that are either stored on the device or provided by a local server\\
+\hline
+FR3 & Display other relevant information stored in a layer\\
+\hline
+FR4 & Georeference the location of the device\\
+\hline
+FR5 & Center on current location by pressing a button\\
+\hline
+FR6 & Choose map type by selecting from a list\\
+\hline
+FR7 & Choose the layers shown by selecting from a list\\
+\hline
+FR8 & Change default settings via a settings menu found in the menu bar\\
+\hline
+FR9 & Display a compass\\
+\hline
+FR10 & Toggle heading/north up by clicking the compass\\
+\hline
+FR11 & Access a help menu via the menu bar\\
+\hline
+FR12 & Add custom points of interest\\
+\hline
+\end{tabular}
 
-\begin{enumerate}[label*=3.1.\arabic*]
-\item Android Moving Map shall provide the ability to pan the map by a dragging gesture
-\item Android Moving Map shall provide the ability to zoom using double tap, pinch gestures, or using an on-screen button
-\item Android Moving Map shall display map tiles that are either stored on the device or provided by a local server
-\item Android Moving Map shall display other relevant information supplied by a local server
-\item Android Moving Map shall georeference the location of the device
-\end{enumerate}
+\subsection{Non-functional}
 
-\section{Non-functional Requirements}
-
-\subsection{General}
-
-\begin{enumerate}[label*=4.1.\arabic*]
-\item Android Moving Map shall run on Android platforms running at least version 3.0 (Honeycomb)
-\item Android Moving Map shall be able to receive GPS data from a local server or the device
-\item Android Moving Map shall display properly on either mobile phones or tablets
-\end{enumerate}
+\begin{tabular}{ | p{.5in} | p{5in} | }
+\hline
+\textbf{ID} & \textbf{Requirement}\\
+\hline
+\hline
+NR0 & Run on Android platforms running at least version 3.0 (Honeycomb)\\
+\hline
+NR1 & Ability to receive GPS data from a local server or the device\\
+\hline
+NR2 & Display properly on either mobile phones or tablets\\
+\hline
+NR3 & Modular code\\
+\hline
+\end{tabular}
 
 \section{Project Plan}
 \subsection{Schedule}
 \subsection{Risks}
 
+\begin{tabular}{ | p{.5in} | p{4.5in} | }
+\hline
+\textbf{ID} & \textbf{Risk}\\
+\hline
+\hline
+R0 & Performance of the system\\
+\hline
+R1 & Finding a feature complete mapping engine\\
+\hline
+R2 & Organizing data in the correct format in a timely manner\\
+\hline
+\end{tabular}
+
 \section{Metrics}
 \subsection{Project}
+\subsubsection{Documentation}
+This will encompass the percentage of the code, features, and other material that has been documented\\
+Percent Written:	\\
+This will encompass the percentage of the documentation that has been reviewed by Dr. Wollowski and/or JD Hill\\
+Percent Reviewed:	0\\
+This will encompass the percentage of the documentation is in a final state (written, reviewed, and stable).\\
+Percent Complete:	0\\
+
+\subsubsection{Code}
+This will encompass the percentage of the code, by feature, that has been written\\
+Percent Written:	0\\
+This will encompass the percentage of the code that has passed Code review (both Interal and External)\\
+Percent Reviewed:	0\\
+This will encompass the percentage of the code that has passed testing phase.\\
+Percent Tested:		0\\
+This will encompass the percentage of the code that is in a final reviewed, tested, and stable form.\\
+Percent Complete:	0\\
+
+
+\subsubsection{Testing}
 \subsection{Process}
 \subsection{Communication}
 
