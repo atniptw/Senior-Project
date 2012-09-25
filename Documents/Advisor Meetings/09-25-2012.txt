@@ -1,0 +1,12 @@
+ANDROID SITUATIONAL AWARENESS
+September 25, 20124:20 pmWollowski’s OfficeMeeting called by:Dr. WollowskiType of meeting:Advisor MeetingAGENDA ITEMSAdvisor Meeting
+Previous Items* AR: Tom make sure that Wollowski is added to Github and Google Drive
+* AR: Need to get Project Plan \ Requirements documentation \ Overview statement
+
+Current Items
+* Raytheon site meeting review
+* Review Requirements Documentation
+o Should we include the schedule as part of the document or can we just keep it in the Microsoft Project file and attach it or something? 
+
+Questions
+
