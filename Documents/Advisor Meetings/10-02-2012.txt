@@ -1,0 +1,12 @@
+ANDROID SITUATIONAL AWARENESS
+October 2, 20124:20 pmWollowski’s OfficeMeeting called by:Dr. WollowskiType of meeting:Advisor MeetingAGENDA ITEMSAdvisor Meeting
+Previous Items* Waiting on JD to provide Requirements Documentation feedback
+
+Current Items
+* Started making rough screen shots
+* Continue work on OSMDroid demo
+* Work on pulling information from a server on the Intranet instead of the Internet
+
+
+Questions
+* How do you pronounce Caramel?
