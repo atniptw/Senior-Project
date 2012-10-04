@@ -21,3 +21,6 @@ local.properties
 *.out
 *.toc
 *.synctex.gz
+
+# Linux open file handlers
+*.~
