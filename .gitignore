@@ -20,4 +20,4 @@ local.properties
 *.log
 *.out
 *.toc
-*.syntex.gz
+*.synctex.gz
