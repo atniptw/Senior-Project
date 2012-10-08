@@ -1,0 +1,10 @@
+package edu.rosehulman.osmdroidtest;
+
+import org.osmdroid.util.GeoPoint;
+
+import android.app.Activity;
+
+public class MainActivity extends Activity {
+	
+	private GeoPoint myLoc = new GeoPoint(39.51, -87.31);
+}

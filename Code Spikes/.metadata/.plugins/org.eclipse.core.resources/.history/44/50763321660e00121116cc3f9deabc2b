@@ -1,0 +1,7 @@
+package edu.rosehulman.osmdroidtest;
+
+import org.osmdroid.views.overlay.OverlayItem;
+
+public class MyLocationOverlayItem extends OverlayItem {
+
+}

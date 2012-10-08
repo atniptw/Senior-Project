@@ -1,0 +1,13 @@
+package edu.rosehulman.osmdroidtest;
+
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
+
+public class MyLocationOverlayItem extends OverlayItem {
+
+	public MyLocationOverlayItem(String aTitle, String aDescription,
+			GeoPoint aGeoPoint) {
+		super(aTitle, aDescription, aGeoPoint);
+	}
+
+}

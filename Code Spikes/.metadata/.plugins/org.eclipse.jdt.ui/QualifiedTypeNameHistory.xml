@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.osmdroid.views.MapView"/>
+<fullyQualifiedTypeName name="org.osmdroid.tileprovider.tilesource.TileSourceFactory"/>
+<fullyQualifiedTypeName name="edu.rosehulman.osmdroidtest.MyLocationOverlayItem"/>
+<fullyQualifiedTypeName name="org.osmdroid.views.overlay.ItemizedOverlay"/>
+<fullyQualifiedTypeName name="org.osmdroid.views.overlay.MyLocationOverlay"/>
+<fullyQualifiedTypeName name="edu.rosehulman.osmdroidtest.DemoItemizedOverlay"/>
+<fullyQualifiedTypeName name="edu.rosehulman.osmdroidtest.R.id"/>
+<fullyQualifiedTypeName name="edu.rosehulman.osmdroidtest.R.drawable"/>
+<fullyQualifiedTypeName name="org.osmdroid.views.overlay.OverlayItem"/>
+</qualifiedTypeNameHistroy>

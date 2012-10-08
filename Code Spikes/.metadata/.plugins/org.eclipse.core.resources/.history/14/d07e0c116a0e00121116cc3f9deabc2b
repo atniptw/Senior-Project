@@ -1,0 +1,13 @@
+package edu.rosehulman.osmdroidtest;
+
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
+
+public class DemoBlip extends OverlayItem {
+
+	public DemoBlip(String aTitle, String aDescription, GeoPoint aGeoPoint) {
+		super(aTitle, aDescription, aGeoPoint);
+		// TODO Auto-generated constructor stub
+	}
+
+}

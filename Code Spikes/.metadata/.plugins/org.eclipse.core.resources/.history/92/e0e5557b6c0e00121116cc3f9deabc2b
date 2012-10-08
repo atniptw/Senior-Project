@@ -1,0 +1,22 @@
+package edu.rosehulman.osmdroidtest;
+
+import java.util.ArrayList;
+
+import org.osmdroid.ResourceProxy;
+import org.osmdroid.views.overlay.ItemizedOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+
+import android.content.ClipData.Item;
+import android.graphics.drawable.Drawable;
+
+public class DemoItemizedOverlay extends ItemizedOverlay<Item> {
+
+	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+	
+	public DemoItemizedOverlay(Drawable pDefaultMarker,
+			ResourceProxy pResourceProxy) {
+		super(pDefaultMarker, pResourceProxy);
+		// TODO Auto-generated constructor stub
+	}
+
+}

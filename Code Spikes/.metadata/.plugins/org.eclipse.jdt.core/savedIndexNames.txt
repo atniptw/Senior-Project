@@ -1,0 +1,6 @@
+INDEX VERSION 1.126+C:\Users\kimsj\Documents\Courses\Senior Project\Code Spikes\.metadata\.plugins\org.eclipse.jdt.core
+813265048.index
+3629363903.index
+4059001159.index
+630436268.index
+1579069031.index
