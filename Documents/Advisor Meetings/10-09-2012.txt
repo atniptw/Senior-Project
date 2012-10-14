@@ -1,0 +1,15 @@
+ANDROID SITUATIONAL AWARENESS
+October 9, 20124:20 pmWollowski’s OfficeMeeting called by:Dr. WollowskiType of meeting:Advisor MeetingAGENDA ITEMSAdvisor Meeting
+Previous Items* Updated requirements documents
+* Updated project schedule to show expected work to be completed for fall quarter
+
+Current Items
+* Presentation after break may conflict with Raytheon trip for requirements review
+* Updated work on Android Intranet Demo App
+* Received the tablets, and the cables have been shipped (also have already been reimbursed)
+* Now that the requirements have become understood, will be working on initial design work of the system
+* Once JD has confirmed our thresholds, will create a Problem Statement
+
+
+Questions
+
