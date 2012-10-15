@@ -36,6 +36,8 @@ September 23, 2012 & Wrote Key Needs, Alternatives\\
 \hline
 October 4, 2012 & Separate document created\\
 \hline
+October 8, 2012 & Added Assumptions and Opportunities, updated Risks\\
+\hline
 October 15, 2012 & Added Introduction\\
 \hline
 \end{tabular}
@@ -89,6 +91,99 @@ N5 & Application must work on any size android device\\
 All considered solutions to the proposed system require Internet access.
 
 \subsection{Proposed Solution}
+
+\section{Requirements}
+
+\subsection{Functional}
+
+\begin{tabular}{ | p{.5in} | p{5in} | }
+\hline
+\textbf{ID} & \textbf{Requirement}\\
+\hline
+\hline
+FR0 & Ability to pan the map by a dragging gesture\\
+\hline
+FR1 & Ability to zoom using double tap, pinch gestures, or using an on-screen button\\
+\hline
+FR2 & Display map tiles that are either stored on the device or provided by a local server\\
+\hline
+FR3 & Display other relevant information stored in a layer\\
+\hline
+FR4 & Georeference the location of the device\\
+\hline
+FR5 & Center on current location by pressing a button\\
+\hline
+FR6 & Choose map type by selecting from a list\\
+\hline
+FR7 & Choose the layers shown by selecting from a list\\
+\hline
+FR8 & Change default settings via a settings menu found in the menu bar\\
+\hline
+FR9 & Display a compass\\
+\hline
+FR10 & Toggle heading/north up by clicking the compass\\
+\hline
+FR11 & Access a help menu via the menu bar\\
+\hline
+FR12 & Add custom points of interest\\
+\hline
+\end{tabular}
+
+\subsection{Non-functional}
+
+\begin{tabular}{ | p{.5in} | p{5in} | }
+\hline
+\textbf{ID} & \textbf{Requirement}\\
+\hline
+\hline
+NR0 & Run on Android platforms running at least version 3.0 (Honeycomb)\\
+\hline
+NR1 & Ability to receive GPS data from a local server or the device\\
+\hline
+NR2 & Display properly on either mobile phones or tablets\\
+\hline
+NR3 & Modular code\\
+\hline
+\end{tabular}
+
+\section{Project Plan}
+\subsection{Schedule}
+\subsection{Assumptions}
+\begin{tabular}{ | p{.5in} | p{4.5in} | }
+\hline
+\textbf{ID} & \textbf{Assumption}\\
+\hline
+\hline
+A0 & There exists an open source mapping engine for Android devices\\
+\hline
+A1 & The mapping engine does not require an internet connection to run\\
+\hline
+A2 & Android devices can connect to a local server\\
+\hline
+\end{tabular}
+
+\subsection{Risks}
+\begin{tabular}{ | p{.5in} | p{4.5in} | }
+\hline
+\textbf{ID} & \textbf{Risk}\\
+\hline
+\hline
+R0 & Performance of the system\\
+\hline
+R1 & Organizing data in the correct format in a timely manner\\
+\hline
+\end{tabular}
+
+\subsection{Opportunities}
+\begin{tabular}{ | p{.5in} | p{4.5in} | }
+\hline
+\textbf{ID} & \textbf{Opportunity}\\
+\hline
+\hline
+O0 & Finding a feature complete mapping engine\\
+\hline
+\end{tabular}
+
 
 
 \end{document}

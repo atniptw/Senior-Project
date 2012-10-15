@@ -5,6 +5,7 @@
 \usepackage[normalem]{ulem}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{graphicx}
 \hypersetup{colorlinks}
 \hyphenpenalty=100000
 \begin{document}
@@ -19,7 +20,7 @@ Tom Atnip, Susi Cisneros, Sam Kim, and Seth Troisi}
 \tableofcontents
 \clearpage
 ~\\
-\begin{Large}\textbf{Changes (based off Git commits)}\end{Large}\\
+\begin{Large}\textbf{Changes}\end{Large}\\
 ~\\
 \begin{tabular}{ | p{1.5in} | p{4.5in} | }
 \hline
@@ -38,10 +39,15 @@ September 23, 2012 & Wrote Key Needs, Alternatives, Risks, Documentation Metrics
 \hline
 September 24, 2012 & Updated Requirements as per Gate 5 visit with Raytheon\\
 \hline
+October 8, 2012 & Revised Requirements, added Assumptions and Opportunities, and updated Risks\\
+\hline
+October 15, 2012 & Added Introduction and made Requirements into shall statements\\
+\hline
 \end{tabular}
 \clearpage
 
 \section{Introduction}
+This document details all documentation associated with this project.  It includes the problem statement, requirements, project plan, and metrics.
 
 \section{Problem Statement}
 \subsection{User/Stakeholder Descriptions}
@@ -86,40 +92,46 @@ N5 & Application must work on any size android device\\
 \subsection{Alternatives}
 All considered solutions to the proposed system require Internet access.
 
+\subsection{Proposed Solution}
+
 \section{Requirements}
 
 \subsection{Functional}
 
-\begin{tabular}{ | p{.5in} | p{5in} | }
+\begin{tabular}{ | p{.5in} | p{4.5in} | p{1in}|}
 \hline
-\textbf{ID} & \textbf{Requirement}\\
+\textbf{ID} & \textbf{Requirement} & \textbf{Priority}\\
 \hline
 \hline
-FR0 & Ability to pan the map by a dragging gesture\\
+FR0 & The system shall let the user pan the map by a dragging gesture & Objective\\
 \hline
-FR1 & Ability to zoom using double tap, pinch gestures, or using an on-screen button\\
+FR1 & The system shall let the user zoom using an on-screen button & Threshold\\
 \hline
-FR2 & Display map tiles that are either stored on the device or provided by a local server\\
+FR2 & The system shall let the user zoom using pinch gestures & Objective\\
 \hline
-FR3 & Display other relevant information stored in a layer\\
+FR3 & The system shall let the user zoom using double tap & Objective\\
 \hline
-FR4 & Georeference the location of the device\\
+FR4 & The system shall display map tiles that are either stored on the device or provided by a local server & Threshold\\
 \hline
-FR5 & Center on current location by pressing a button\\
+FR5 & The system shall display other relevant information stored in a layer & Objective\\
 \hline
-FR6 & Choose map type by selecting from a list\\
+FR6 & The system shall georeference the location of the device & Threshold\\
 \hline
-FR7 & Choose the layers shown by selecting from a list\\
+FR7 & The system shall let the user center on current location by pressing a button & Objective\\
 \hline
-FR8 & Change default settings via a settings menu found in the menu bar\\
+FR8 & The system shall let the user choose the map type by selecting from a list & Objective\\
 \hline
-FR9 & Display a compass\\
+FR9 & The system shall let the user choose the layers shown by selecting from a list & Objective\\
 \hline
-FR10 & Toggle heading/north up by clicking the compass\\
+FR10 & The system shall let the user change default settings via a settings menu found in the menu bar & Threshold\\
 \hline
-FR11 & Access a help menu via the menu bar\\
+FR11 & The system shall display a compass & Threshold\\
 \hline
-FR12 & Add custom points of interest\\
+FR12 & The system shall let the user toggle heading/north up by clicking the compass & Threshold\\
+\hline
+FR13 & The system shall let the user access a help menu via the menu bar & Objective\\
+\hline
+FR14 & The system shall let the user add custom points of interest & Objective\\
 \hline
 \end{tabular}
 
@@ -130,20 +142,35 @@ FR12 & Add custom points of interest\\
 \textbf{ID} & \textbf{Requirement}\\
 \hline
 \hline
-NR0 & Run on Android platforms running at least version 3.0 (Honeycomb)\\
+NR0 & The system shall run on Android platforms running at least version 3.0 (Honeycomb)\\
 \hline
-NR1 & Ability to receive GPS data from a local server or the device\\
+NR1 & The system shall receive GPS data from a local server or the device\\
 \hline
-NR2 & Display properly on either mobile phones or tablets\\
+NR2 & The system shall display properly on either mobile phones or tablets\\
 \hline
-NR3 & Modular code\\
+NR3 & The system shall use modular code\\
 \hline
 \end{tabular}
 
 \section{Project Plan}
 \subsection{Schedule}
-\subsection{Risks}
+\includegraphics[keepaspectratio, width=8in]{FallSchedule.pdf} \\
 
+\subsection{Assumptions}
+\begin{tabular}{ | p{.5in} | p{4.5in} | }
+\hline
+\textbf{ID} & \textbf{Assumption}\\
+\hline
+\hline
+A0 & There exists an open source mapping engine for Android devices\\
+\hline
+A1 & The mapping engine does not require an internet connection to run\\
+\hline
+A2 & Android devices can connect to a local server\\
+\hline
+\end{tabular}
+
+\subsection{Risks}
 \begin{tabular}{ | p{.5in} | p{4.5in} | }
 \hline
 \textbf{ID} & \textbf{Risk}\\
@@ -151,45 +178,61 @@ NR3 & Modular code\\
 \hline
 R0 & Performance of the system\\
 \hline
-R1 & Finding a feature complete mapping engine\\
+R1 & Organizing data in the correct format in a timely manner\\
 \hline
-R2 & Organizing data in the correct format in a timely manner\\
+\end{tabular}
+
+\subsection{Opportunities}
+\begin{tabular}{ | p{.5in} | p{4.5in} | }
+\hline
+\textbf{ID} & \textbf{Opportunity}\\
+\hline
+\hline
+O0 & Finding a feature complete mapping engine\\
 \hline
 \end{tabular}
 
 \section{Metrics}
 \subsection{Project}
 \subsubsection{Documentation}
-This will encompass the percentage of the code, features, and other material that has been documented\\
-Percent Written:	\\
-This will encompass the percentage of the documentation that has been reviewed by Dr. Wollowski and/or JD Hill\\
-Percent Reviewed:	0\\
-This will encompass the percentage of the documentation is in a final state (written, reviewed, and stable).\\
-Percent Complete:	0\\
-
+The progress of the documentation will be tracked by breaking it down into three parts: the percent written and ready for review, the percent that has been reviewed, and the percent that is ready for delivery. The initial portion will encompass the percentage of the requirements, features, and other material that have been documented according to our currently known goals. A portion of the documentation will be considered in the reviewed stage once Dr. Wollowski and/or JD Hill have provided feedback and approval. Once a section of the documentation is in its final state (written, reviewed, and stable), it will be considered complete.\\ \\
+\begin{tabular}{l r}
+Percent Written: & 0 \\
+Percent Reviewed: & 0 \\
+Percent Complete: & 0 \\
+\end{tabular}
 \subsubsection{Code}
-This will encompass the percentage of the code, by feature, that has been written\\
-Percent Written:	0\\
-This will encompass the percentage of the code that has passed Code review (both Interal and External)\\
-Percent Reviewed:	0\\
-This will encompass the percentage of the code that has passed testing phase.\\
-Percent Tested:		0\\
-This will encompass the percentage of the code that is in a final reviewed, tested, and stable form.\\
-Percent Complete:	0\\
-
-
+During the coding phase of this project, progress will be tracked by the features scheduled during an iteration and the number of features completed. Code will belong to one of five phases – unwritten, written, peer reviewed, tested, or complete. Once code has been written and passes the required unit tests, it will undergo a peer review to check for good coding practices, clarity, and errors. After a peer review the functionality will then be required to pass integration tests. Once it has passed system integration, it will be considered complete and will be merged into the main branch of code.\\ \\
+\begin{tabular}{l r}
+Percent Written: & 0 \\
+Percent Reviewed: & 0 \\
+Percent Tested: & 0 \\
+Percent Complete: & 0 \\
+\end{tabular}
 \subsubsection{Testing}
+For the final phase of the project, progress will be measured by how many tests are passing. The tests that the software will be subjected to will be more thorough than the tests required for code to join the main branch. Most tests will be automated, but there will also be human factor tests.\\ \\
+\begin{tabular}{l r}
+Percent Passing: & 0 \\
+\end{tabular}
 \subsection{Process}
+The process that the project is following will be measured by due dates met versus missed due dates.\\ \\
+\begin{tabular}{l r}
+Milestone Dates Kept: & 0 \\
+\end{tabular}
+
 \subsection{Communication}
+Communication will be measured by how well the team feels that their needs are being heard and being taken care of, along with efficiency of meetings.\\ \\
+\begin{tabular}{l r}
+Team Confidence: & 0 \\
+Meetings: & 0 \\
+\end{tabular}
 
 \clearpage
 
 \section{Questions}
 
 \begin{enumerate}[label*=6.\arabic*]
-\item Is the kneeboard part of the current system? We don't remember if you said it was a prototype or not.
-\item Can you map out the current solution for us?
-
+\item
 \end{enumerate}
 
 
