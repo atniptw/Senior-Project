@@ -1,0 +1,7 @@
+ANDROID SITUATIONAL AWARENESS
+October 24, 201212:00pmCSSE Conference RoomMeeting called by:Tom AtnipType of meeting:Weekly Client MeetingNote taker:Seth TroisiAttendees:Tom Atnip, Susi Cisneros, JD Hill, Sam Kim, Seth TroisiAGENDA ITEMS* Project Updates from Raytheon
+* Requirements Documentation Feedback from Raytheon
+* Working on Preliminary Design and User Stories
+* Fall Quarter remaining time update
+
+Questions
