@@ -38,6 +38,8 @@ October 4, 2012 & Separate document created\\
 \hline
 October 15, 2012 & Added Introduction\\
 \hline
+October 25, 2012 & Updated Requirements, added Performance Requirements skeleton\\
+\hline
 \end{tabular}
 \clearpage
 
@@ -62,27 +64,39 @@ FR2 & The system shall let the user zoom using pinch gestures & Objective\\
 \hline
 FR3 & The system shall let the user zoom using double tap & Objective\\
 \hline
-FR4 & The system shall display map tiles that are either stored on the device or provided by a local server & Threshold\\
+FR4 & The system shall store map tiles on the device & Threshold\\
 \hline
-FR5 & The system shall display other relevant information stored in a layer & Objective\\
+FR5 & The system shall display map tiles which are stored on the device & Threshold\\
 \hline
-FR6 & The system shall georeference the location of the device & Threshold\\
+FR6 & The system shall be able to pull map tiles which are stored on a local server and store them on the device & Objective\\
 \hline
-FR7 & The system shall let the user center on current location by pressing a button & Objective\\
+FR7 & The system shall georeference the location of the device & Threshold\\
 \hline
-FR8 & The system shall let the user choose the map type by selecting from a list & Objective\\
+FR8 & The system shall let the user center on current location & Objective\\
 \hline
-FR9 & The system shall let the user choose the layers shown by selecting from a list & Objective\\
+FR9 & The system shall store multiple map types & Threshold\\
 \hline
-FR10 & The system shall let the user change default settings via a settings menu found in the menu bar & Threshold\\
+FR10 & The system shall let the user choose the map type & Objective\\
 \hline
-FR11 & The system shall display a compass & Threshold\\
+FR11 & The system shall store points of interest as a map overlay & Objective\\
 \hline
-FR12 & The system shall let the user toggle heading/north up by clicking the compass & Threshold\\
+FR12 & The system shall display points of interest overlays & Objective\\
 \hline
-FR13 & The system shall let the user access a help menu via the menu bar & Objective\\
+FR13 & The system shall let the user choose which overlays are displayed & Objective\\
 \hline
 FR14 & The system shall let the user add custom points of interest & Objective\\
+\hline
+FR15 & The system shall let the user choose which overlay the custom point of interest is added to & Objective\\
+\hline
+FR16 & The system shall let the user create new overlays & Objective\\
+\hline
+FR17 & The system shall display a compass & Threshold\\
+\hline
+FR18 & The system shall let the user toggle heading/north up & Threshold\\
+\hline
+FR19 & The system shall let the user change default settings via a settings menu found in the menu bar & Threshold\\
+\hline
+FR20 & The system shall let the user access a help menu via the menu bar & Objective\\
 \hline
 \end{tabular}
 
@@ -101,7 +115,20 @@ NR2 & The system shall display properly on either mobile phones or tablets\\
 \hline
 NR3 & The system shall use modular code\\
 \hline
+NR3 & The system shall use the Android usability conventions\\
+\hline
 \end{tabular}
 
+
+\subsection{Performance}
+
+\begin{tabular}{ | p{.5in} | p{5in} | }
+\hline
+\textbf{ID} & \textbf{Requirement}\\
+\hline
+\hline
+PR0 & The system shall perform fantastically\\
+\hline
+\end{tabular}
 
 \end{document}
