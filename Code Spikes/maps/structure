@@ -1,0 +1,21 @@
+url:
+
+    http://a.tile.openstreetmap.org/10/534/345.png
+
+components
+
+    http://a.tile.openstreetmap.org + /ZOOM + /LATITUDE + /LONGITUDE.png
+
+
+0/0/0.png           whole world
+    =>  1/0/0.png       upper left
+    =>  1/0/1.png       lower left
+    =>  1/1/0.png       upper right
+    =>  1/1/1.png       lower right
+
+
+Z/X/Y.png               tile
+    =>  Z+1/2*X/2*Y         upper left
+    =>  Z+1/2*X/2*Y+1       lower left
+    =>  Z+1/2*X+1/2*Y       upper right
+    =>  Z+1/2*X+1/2*Y+1     lower right
