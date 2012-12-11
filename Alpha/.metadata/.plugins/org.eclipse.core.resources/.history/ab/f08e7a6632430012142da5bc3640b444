@@ -1,6 +1,5 @@
 package edu.rosehulman.androidmovingmap;
 
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
 
 import android.app.Activity;
@@ -15,7 +14,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         MapView mapView = new OSMMapView(this, 256);
-        mapView.setTileSource(TileSourceFactory.MAPNIK);
         
         setContentView(mapView);
     }

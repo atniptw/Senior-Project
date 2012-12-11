@@ -6,7 +6,6 @@ import org.osmdroid.views.MapView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import edu.rosehulman.maps.OSMMapView;
 
 public class MainActivity extends Activity {
 

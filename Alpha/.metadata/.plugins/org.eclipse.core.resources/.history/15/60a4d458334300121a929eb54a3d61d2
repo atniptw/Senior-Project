@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        MapView mapView = new OSMMapView(this, 256);
+        MapView mapView = new MapView(this, 256);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         
         setContentView(mapView);

@@ -1,0 +1,16 @@
+package edu.rosehulman.overlays;
+
+import org.osmdroid.ResourceProxy;
+import org.osmdroid.views.overlay.ItemizedOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+
+import android.graphics.drawable.Drawable;
+
+public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
+
+	public AMMItemizedOverlay(Drawable pDefaultMarker,
+			ResourceProxy pResourceProxy) {
+		super(pDefaultMarker, pResourceProxy);
+	}
+
+}
