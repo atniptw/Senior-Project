@@ -1,0 +1,5 @@
+package edu.rosehulman.maps;
+
+public class OSMMapView {
+
+}
