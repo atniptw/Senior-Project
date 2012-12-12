@@ -3,21 +3,26 @@ package edu.rosehulman.overlays;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.ResourceProxy;
+import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IMapView;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 
 public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private List<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+	private Drawable mIcon;
+	private String mName;
 	
-	public AMMItemizedOverlay(Drawable pDefaultMarker,
-			ResourceProxy pResourceProxy) {
-		super(pDefaultMarker, pResourceProxy);
+	public AMMItemizedOverlay(Drawable pDefaultMarker, String name,
+			Context context) {
+		super(pDefaultMarker, new DefaultResourceProxyImpl(context));
+		mIcon = pDefaultMarker;
+		mName = name;
 	}
 	
 	public void addOverlay(OverlayItem overlay) {
@@ -38,6 +43,14 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public int size() {
 		return mOverlays.size();
+	}
+	
+	public Drawable getIcon() {
+		return mIcon;
+	}
+	
+	public String getName() {
+		return mName;
 	}
 
 }

@@ -1,6 +1,8 @@
 package edu.rosehulman.overlays;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -24,15 +26,25 @@ public class OverlayManager {
 		overlayTypes = new HashMap<OverlayTypes, AMMItemizedOverlay>();
 		Resources resources = this.context.getResources();
 		overlayTypes.put( OverlayTypes.TYPE_1, 
-						  new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_1), this.context ));
+						  new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_1), 
+								  				"Type 1",
+								  				this.context ));
 		overlayTypes.put( OverlayTypes.TYPE_2, 
-							new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_2), this.context ));
+							new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_2), 
+												"Type 2",
+												this.context ));
 		overlayTypes.put( OverlayTypes.TYPE_3,
-							new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_3), this.context ));
+							new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_3), 
+												"Type 3",
+												this.context ));
 	}
 	
 	public OverlayManager(Context context) {
 		this.context = context;
 		initializeOverlayTypes();
+	}
+	
+	public List<AMMItemizedOverlay> getOverlayTypes() {
+		return new ArrayList<AMMItemizedOverlay>(overlayTypes.values());
 	}
 }
