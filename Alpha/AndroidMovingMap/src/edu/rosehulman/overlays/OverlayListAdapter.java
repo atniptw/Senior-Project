@@ -19,7 +19,7 @@ public class OverlayListAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<AMMItemizedOverlay> mOverlays;
 	
-	public OverlayListAdapter(Context context, OverlayManager manager) {
+	public OverlayListAdapter(Context context, AMMOverlayManager manager) {
 		this.mContext = context;
 		this.mOverlays = manager.getOverlayTypes();
 	}
