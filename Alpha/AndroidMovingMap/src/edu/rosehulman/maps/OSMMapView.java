@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -32,7 +33,14 @@ public class OSMMapView extends MapView {
 		mContext = context;
 		getOverlays().addAll(mOverlayManager.getOverlayTypes());
 	}
-
+	
+	public OSMMapView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		mOverlayManager = new AMMOverlayManager(context);
+		mContext = context;
+		getOverlays().addAll(mOverlayManager.getOverlayTypes());
+	}
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		return mGestureDetector.onTouchEvent(event);
