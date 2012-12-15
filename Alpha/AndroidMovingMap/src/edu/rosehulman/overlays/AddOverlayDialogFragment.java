@@ -9,10 +9,10 @@ import android.widget.ListView;
 
 public class AddOverlayDialogFragment extends DialogFragment {
 	
-	private OverlayManager mOverlayManager;
+	private AMMOverlayManager mOverlayManager;
 	private ListView mOverlayListView;
 	
-	public AddOverlayDialogFragment(OverlayManager manager, Context context) {
+	public AddOverlayDialogFragment(AMMOverlayManager manager, Context context) {
 		this.mOverlayManager = manager;
 		mOverlayListView = new ListView(context);
 	}
