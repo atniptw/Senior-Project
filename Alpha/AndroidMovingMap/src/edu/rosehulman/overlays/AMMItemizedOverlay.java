@@ -17,12 +17,14 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private List<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Drawable mIcon;
 	private String mName;
+	private boolean mActive;
 	
 	public AMMItemizedOverlay(Drawable pDefaultMarker, String name,
 			Context context) {
 		super(pDefaultMarker, new DefaultResourceProxyImpl(context));
 		mIcon = pDefaultMarker;
 		mName = name;
+		mActive = true;
 	}
 	
 	public void addOverlay(OverlayItem overlay) {
@@ -51,6 +53,10 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	public String getName() {
 		return mName;
+	}
+	
+	public boolean isActive() {
+		return mActive;
 	}
 
 }

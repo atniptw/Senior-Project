@@ -1,5 +1,6 @@
 package edu.rosehulman.overlays;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import edu.rosehulman.androidmovingmap.R;
 
-public class AMMOverlayManager {
+public class AMMOverlayManager implements Serializable {
 
 	// Enumerate Overlay types and their associated data (ie icon)
 	// These should have some better names :P
@@ -20,6 +21,8 @@ public class AMMOverlayManager {
 	}
 	
 	private Map<OverlayTypes, AMMItemizedOverlay> overlayTypes;
+	// TODO Perhaps all overlays should use the below map style?
+	private Map<String, AMMItemizedOverlay> customOverlays; 
 	private Context context;
 	
 	private void initializeOverlayTypes() {
@@ -37,6 +40,8 @@ public class AMMOverlayManager {
 							new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_3), 
 												"Type 3",
 												this.context ));
+		
+		customOverlays = new HashMap<String, AMMItemizedOverlay>();
 	}
 	
 	public AMMOverlayManager(Context context) {
@@ -45,6 +50,13 @@ public class AMMOverlayManager {
 	}
 	
 	public List<AMMItemizedOverlay> getOverlayTypes() {
-		return new ArrayList<AMMItemizedOverlay>(overlayTypes.values());
+		List<AMMItemizedOverlay> result = new ArrayList<AMMItemizedOverlay>(overlayTypes.values());
+		result.addAll(customOverlays.values());
+		return result;
 	}
+	
+	public void addCustomOverlay(final String name) {
+		customOverlays.put(name, new AMMItemizedOverlay(this.context.getResources().getDrawable(R.drawable.ic_launcher), name, this.context));
+	}
+	
 }

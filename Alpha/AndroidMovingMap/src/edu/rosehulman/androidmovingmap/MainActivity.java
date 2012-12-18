@@ -1,5 +1,7 @@
 package edu.rosehulman.androidmovingmap;
 
+import java.io.Serializable;
+
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 
 import android.app.Activity;
@@ -11,8 +13,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
+import edu.rosehulman.overlays.AddPOITypeDialogFragment;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener, Serializable {
 	
 	private OSMMapView mMapView;
 	private Button mPOITypeButton;
@@ -36,6 +39,15 @@ public class MainActivity extends Activity implements OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == R.id.add_poi_type) {
+    		AddPOITypeDialogFragment.newInstance(mMapView.getAMMOverlayManager(), this).show(getFragmentManager(), "lol");
+    		return true;
+    	}
+    	return super.onOptionsItemSelected(item);
     }
 
 	public void onClick(View v) {
