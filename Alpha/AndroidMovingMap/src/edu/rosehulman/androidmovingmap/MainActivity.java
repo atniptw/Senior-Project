@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,8 +17,6 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,12 +25,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
+import edu.rosehulman.overlays.AddPOITypeDialogFragment;
 
-public class MainActivity extends FragmentActivity implements OnClickListener,
+public class MainActivity extends Activity implements OnClickListener,
 		Serializable {
 
 	private OSMMapView mMapView;
 	private LocationManager locationManager;
+	private Button mPOITypeButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.add_poi_type:
+			Toast.makeText(this, "I can totally add POI types",
+					Toast.LENGTH_SHORT).show();
 			AddPOITypeDialogFragment.newInstance(
 					mMapView.getAMMOverlayManager(), this).show(
 					getFragmentManager(), "lol");
@@ -90,7 +94,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 				.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 		if (!gpsEnabled) {
-			new EnableGpsDialogFragment().show(getSupportFragmentManager(),
+			new EnableGpsDialogFragment().show(getFragmentManager(),
 					"enableGpsDialog");
 		}
 	}
