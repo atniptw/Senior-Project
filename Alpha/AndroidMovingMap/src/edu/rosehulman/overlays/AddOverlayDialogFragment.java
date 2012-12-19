@@ -22,9 +22,9 @@ public class AddOverlayDialogFragment extends DialogFragment {
 		final Dialog dialog = new Dialog(getActivity());
 		
 		dialog.setContentView(mOverlayListView);
-		BaseAdapter adapter = new OverlayListAdapter(getActivity(), mOverlayManager);
+//		BaseAdapter adapter = new OverlayListAdapter(getActivity(), mOverlayManager);
 		
-		mOverlayListView.setAdapter(adapter);
+//		mOverlayListView.setAdapter(adapter);
 
 		return dialog;
 	}
