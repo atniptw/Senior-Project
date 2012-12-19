@@ -1,5 +1,7 @@
 package edu.rosehulman.androidmovingmap;
 
+import java.io.Serializable;
+
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 
 import android.app.AlertDialog;
@@ -18,10 +20,14 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements OnClickListener,
+		Serializable {
 
 	private OSMMapView mMapView;
 	private LocationManager locationManager;
@@ -29,6 +35,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
 		int refreshGPStime = 1000;
 		int refreshGPSdistance = 10;
@@ -40,13 +47,15 @@ public class MainActivity extends FragmentActivity {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				refreshGPStime, refreshGPSdistance, listener);
 
-		mMapView = new OSMMapView(this, 256);
+		mMapView = (OSMMapView) findViewById(R.id.map_view);
 		mMapView.setClickable(true);
 		mMapView.setMultiTouchControls(true);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.setTileSource(TileSourceFactory.MAPNIK);
 
-		setContentView(mMapView);
+		mPOITypeButton = (Button) findViewById(R.id.poi_types);
+		mPOITypeButton.setOnClickListener(this);
+
 	}
 
 	@Override
@@ -58,6 +67,11 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.add_poi_type:
+			AddPOITypeDialogFragment.newInstance(
+					mMapView.getAMMOverlayManager(), this).show(
+					getFragmentManager(), "lol");
+			return true;
 		case R.id.menu_settings:
 			Intent intent = new Intent(this, Preferences.class);
 			startActivity(intent);
@@ -136,5 +150,13 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
 		}
 	};
+
+	public void onClick(View v) {
+		if (v.getId() == R.id.poi_types) {
+			Toast.makeText(this, "Pretend this is a dialog", Toast.LENGTH_SHORT)
+					.show();
+		}
+
+	}
 
 }

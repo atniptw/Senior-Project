@@ -3,7 +3,7 @@
         android:title="@string/menu_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
-    <item android:id="@+id/add_poi"
-        android:title="@string/add_poi"
+    <item android:id="@+id/add_poi_type"
+        android:title="Add POI Type"
         android:showAsAction="ifRoom" />
 </menu>
