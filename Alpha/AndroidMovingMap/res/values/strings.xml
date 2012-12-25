@@ -3,6 +3,10 @@
     <string name="app_name">AndroidMovingMap</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_start_stop_sync">Sync with Server</string>
+    <string name="menu_display">Sync POI to map</string>
+    <string name="menu_cycle_map_type">Cycle map type</string>
+	<string name="menu_quit">Quit</string>
     <string name="title_activity_main">Android Moving Map</string>
     <string name="add_poi">Add POI</string>
     <string name="enable_gps">Enable GPS</string>
