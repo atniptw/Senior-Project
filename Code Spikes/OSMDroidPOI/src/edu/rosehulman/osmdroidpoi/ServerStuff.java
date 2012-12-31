@@ -206,7 +206,7 @@ public class ServerStuff {
 	  	public void run() {
 	  		try{
 	  			//open a socket connecting us to the server
-	  			socket = new Socket("queen.wlan.rose-hulman.edu", 5047);
+	  			socket = new Socket("137.112.111.1", 5047);
 	  			Log.d("POI socket", "Connected!");
 
 	  			//create in and out streams

@@ -39,7 +39,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		int refreshGPStime = 1000;
+		int refreshGPStime = 100;
 		int refreshGPSdistance = 10;
 
 		locationManager = (LocationManager) this

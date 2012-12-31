@@ -12,19 +12,13 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
-import edu.rosehulman.osmdroidpoi.ServerStuff.GetUrlDataTask;
-import edu.rosehulman.osmdroidtest.R;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-
-import android.util.Log;
 
 
 public class MainActivity extends Activity {
