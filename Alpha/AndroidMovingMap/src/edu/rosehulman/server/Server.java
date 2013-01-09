@@ -1,4 +1,4 @@
-package edu.rosehulman.osmdroidpoi;
+package edu.rosehulman.server;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,23 +23,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.rosehulman.server.POI;
+
 
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
-public class ServerStuff {
-	public static String message;
-	public static String file;
+public class Server {
+	private static String connect_to = "192.168.1.106";	
 
 	public static Map<Integer,POI> POIelements;
+	public static String message;
+	public static String file;
 	
-	public ServerStuff()
+	public Server()
 	{
-		if (ServerStuff.POIelements == null)
+		if (Server.POIelements == null)
 		{
-			ServerStuff.POIelements = new HashMap<Integer,POI>();
+			Server.POIelements = new HashMap<Integer,POI>();
 		}
 	}
 
@@ -64,8 +67,8 @@ public class ServerStuff {
 //				Log.d("element " + UIDstring, "" + POIelement);
 			
 				POI point = new POI(POIelement);
-				ServerStuff.POIelements.remove(UIDint);
-				ServerStuff.POIelements.put(UIDint, point);
+				Server.POIelements.remove(UIDint);
+				Server.POIelements.put(UIDint, point);
 
 			}
 			return true;
@@ -140,7 +143,7 @@ public class ServerStuff {
 		protected void onPostExecute(String data) {
 			message = "Message:\n" + data;
 
-			ServerStuff.updatePOIFromString(data);
+			Server.updatePOIFromString(data);
 		}
 
 		protected String doInBackground(String... urls) {
@@ -206,7 +209,7 @@ public class ServerStuff {
 	  	public void run() {
 	  		try{
 	  			//open a socket connecting us to the server
-	  			socket = new Socket("137.112.111.1", 5047);
+	  			socket = new Socket(connect_to, 5047);
 	  			Log.d("POI socket", "Connected!");
 
 	  			//create in and out streams
@@ -226,7 +229,7 @@ public class ServerStuff {
   					{
   	  					message = (String)in.readObject();
   						Log.d("POI socket",  "server says: omitted"); //" + message);
-  						if (ServerStuff.updatePOIFromString(message))
+  						if (Server.updatePOIFromString(message))
   						{
   							Log.d("POI socket", "dispatching updateDisplay handler");
   							updatePOIHandler.sendMessage(updatePOIHandler.obtainMessage());

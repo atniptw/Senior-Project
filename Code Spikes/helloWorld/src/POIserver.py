@@ -122,7 +122,7 @@ def serverSocket():
             conn.sendall('t' + chr(length/256) + chr(length%256) + jsonPOI)
 
             messageNum += 1
-            time.sleep(0.5 + (random.random() / 5.0))
+            time.sleep(0.25 + (random.random() / 4.0))
 
     except KeyboardInterrupt:
         print "broke by KeyboardInterrupt"
