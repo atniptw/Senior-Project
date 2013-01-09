@@ -26,17 +26,19 @@ import org.json.JSONObject;
 import edu.rosehulman.server.POI;
 
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
+@SuppressLint("UseSparseArrays")
 public class Server {
-	private static String connect_to = "192.168.1.106";	
+	private static String connect_to = "192.168.1.106";
+	private static int connect_port = 5047;
 
+	private static String message;
 	public static Map<Integer,POI> POIelements;
-	public static String message;
-	public static String file;
 	
 	public Server()
 	{
@@ -69,7 +71,6 @@ public class Server {
 				POI point = new POI(POIelement);
 				Server.POIelements.remove(UIDint);
 				Server.POIelements.put(UIDint, point);
-
 			}
 			return true;
 		} catch (JSONException e) {
@@ -77,116 +78,6 @@ public class Server {
 			return false;
 		}
 	}
-	
-	
-	public class GetFiles extends AsyncTask<String, Void, String> {
-		protected void onPostExecute(String files) {
-			message = "File(s) fetched:\n" + files;
-		}
-
-		protected String doInBackground(String... urls) {
-			String files = "";
-			InputStream in = null;
-
-			try {            
-				for (String url : urls)
-				{
-					files += "<" + url + "> ";
-					Log.d("filename", "about to fetch file " + url);
-
-					URL u = new URL(url);
-		            HttpURLConnection c = (HttpURLConnection) u.openConnection();
-		            c.setRequestMethod("GET");
-		            c.setDoOutput(true);
-
-		            c.connect();
-
-					in = c.getInputStream();
-					
-					File folder = new File(Environment.getExternalStorageDirectory() + "/OSMDroid/tiles/Mapnik/0/0");
-					if (!folder.exists()) {
-					    folder.mkdirs();
-					}
-					String PATH_op = Environment.getExternalStorageDirectory() + "/OSMDroid/tiles/Mapnik/0/0/0.png.tile";
-
-					Log.d("path", "path: " + PATH_op);
-
-		            FileOutputStream f = new FileOutputStream(new File(PATH_op));
-
-		            long size = 0;
-		            byte[] buffer = new byte[1024];
-		            int len1 = 0;
-		            while ( (len1 = in.read(buffer)) > 0 ) {
-		                f.write(buffer,0, len1);
-		                size += len1;
-		            }
-					Log.d("filesize", "file size: " + size);
-
-		            f.close();
-					in.close();
-				}
-			}
-			catch (Exception e1) {}
-			finally {
-				if (in != null) {
-					try {
-						in.close();
-					} catch (Exception e2) {}
-				}
-			}
-			return files;
-		}
-	}
-
-	
-	public class GetUrlDataTask extends AsyncTask<String, Void, String> {
-		protected void onPostExecute(String data) {
-			message = "Message:\n" + data;
-
-			Server.updatePOIFromString(data);
-		}
-
-		protected String doInBackground(String... urls) {
-			String page = "";
-			BufferedReader in = null;
-
-			try {
-				HttpClient client = new DefaultHttpClient();
-				client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
-						"android");
-				HttpGet request = new HttpGet();
-				request.setHeader("Content-Type", "text/plain; charset=utf-8");
-				request.setURI(new URI(urls[0]));
-
-				Log.d("response code", "about to get it");
-				HttpResponse response = client.execute(request);
-				Log.d("response code", "got response");
-
-				in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-				StringBuffer sb = new StringBuffer("");
-				String line = "";
-				String NL = System.getProperty("line.separator");
-				while ((line = in.readLine()) != null) {
-					sb.append(line + NL);
-				}
-				in.close();
-
-				page = sb.toString();
-
-			}
-			catch (Exception e1) {}
-			finally {
-				if (in != null) {
-					try {
-						in.close();
-					} catch (Exception e2) {}
-				}
-			}
-			return page;
-		}
-	}
-
 	
 	public class ListenPOISocket extends Thread {
 		private Socket socket;
@@ -209,7 +100,7 @@ public class Server {
 	  	public void run() {
 	  		try{
 	  			//open a socket connecting us to the server
-	  			socket = new Socket(connect_to, 5047);
+	  			socket = new Socket(connect_to, connect_port);
 	  			Log.d("POI socket", "Connected!");
 
 	  			//create in and out streams
@@ -223,22 +114,23 @@ public class Server {
   					if (!message.equals("ACKhello\n"))
   						Log.d("POI socket", "server did not ackHello instead recieved|" + message + "|");
   					else
+  					{
   						Log.d("POI socket", "server replied ackHello");
 
-  					while (!this.stopThread)
-  					{
-  	  					message = (String)in.readObject();
-  						Log.d("POI socket",  "server says: omitted"); //" + message);
-  						if (Server.updatePOIFromString(message))
-  						{
-  							Log.d("POI socket", "dispatching updateDisplay handler");
-  							updatePOIHandler.sendMessage(updatePOIHandler.obtainMessage());
-  						}
-  						Thread.sleep(50);
+	  					while (!this.stopThread)
+	  					{
+	  	  					message = (String)in.readObject();
+	  						Log.d("POI socket",  "server says: omitted"); //" + message);
+	  						if (Server.updatePOIFromString(message))
+	  						{
+	  							Log.d("POI socket", "dispatching updateDisplay handler");
+	  							updatePOIHandler.sendMessage(updatePOIHandler.obtainMessage());
+	  						}
+	  						Thread.sleep(50);
+	  					}
   					}
 				}
   				catch(ClassNotFoundException classNot){
-  					System.err.println("data received in unknown format");
   				}
 	  		}
 	  		catch(Exception e){

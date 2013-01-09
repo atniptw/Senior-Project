@@ -106,31 +106,28 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.add_poi_type:
+		int itemId = item.getItemId();
+		if (itemId == R.id.add_poi_type) {
 			Toast.makeText(this, "I can totally add POI types",
 					Toast.LENGTH_SHORT).show();
 			AddPOITypeDialogFragment.newInstance(
 					mMapView.getAMMOverlayManager(), this).show(
 					getFragmentManager(), "lol");
 			return true;
-
-		case R.id.menu_settings:
+		} else if (itemId == R.id.menu_settings) {
 			Intent intent = new Intent(this, Preferences.class);
 			startActivity(intent);
 			return true;
-        
-		case R.id.menu_cycle_map_type:
-        	mapSourceIndex = (mapSourceIndex + 1) % mapSourceNames.size();
-        	tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 4, 256, ".png",
+		} else if (itemId == R.id.menu_cycle_map_type) {
+			mapSourceIndex = (mapSourceIndex + 1) % mapSourceNames.size();
+			tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 4, 256, ".png",
             		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
-        	Log.d("menu cycle", "pathBase: " + tileSource.getTileURLString(new MapTile(0,0,0)));
-        	mMapView.setTileSource(tileSource);
-            mMapView.invalidate();
-            return true;
-
-        case R.id.menu_start_stop_sync:
-        	if (this.POIThread == null)
+			Log.d("menu cycle", "pathBase: " + tileSource.getTileURLString(new MapTile(0,0,0)));
+			mMapView.setTileSource(tileSource);
+			mMapView.invalidate();
+			return true;
+		} else if (itemId == R.id.menu_start_stop_sync) {
+			if (this.POIThread == null)
         	{
         		this.POIThread = this.server.new ListenPOISocket();
         		this.POIThread.updatePOIHandler = this.invalidateDisplay;
@@ -140,28 +137,11 @@ public class MainActivity extends Activity implements OnClickListener,
             	this.POIThread.stopThread = true;
             	this.POIThread = null;
         	}
-//        	this.invalidateOptionsMenu();
-        	return true;
- 
-        case R.id.menu_display:
-        	this.updatePOIandScreen();
-        	return true;
-
-        case R.id.menu_quit:
-        	if (this.POIThread != null)
-        	{
-        		this.POIThread.stopThread = true;
-        		Log.d("test", "setting closeThread");
-        		try {
-        			this.POIThread.join();
-        			Log.d("test", "joined");
-        		} catch (InterruptedException e) {}
-        	}
-        	// TODO I do not know how to close cleanly
-        	android.os.Process.killProcess(android.os.Process.myPid());
-        	return true;
-		
-        default:
+			return true;
+		} else if (itemId == R.id.menu_display) {
+			this.updatePOIandScreen();
+			return true;
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}
@@ -203,6 +183,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	protected void onStop() {
 		super.onStop();
 		locationManager.removeUpdates(listener);
+
+		//TODO seth should test
+    	this.POIThread.stopThread = true;
+    	this.POIThread = null;
 	}
 
 	private void enableLocationSettings() {
@@ -244,13 +228,12 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	}
 
-	// TODO REVIEW THIS SOMEONE NOT SETH
     private void updatePOIandScreen()
     {
     	AMMItemizedOverlay server_poi_type = null;
     	for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlayTypes())
     	{
-    		if (type.getName() == server_poi_name)
+   			if (type.getName() == server_poi_name)
     		{
     			server_poi_type = type;
     		}

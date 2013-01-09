@@ -1,5 +1,7 @@
 package edu.rosehulman.server;
 
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
@@ -10,6 +12,7 @@ public class POI {
     private double latitude;
     private double longitude;
     private int POItype;
+    private Map<String,String> attributes;
     
     public POI(JSONObject data) throws JSONException
     {

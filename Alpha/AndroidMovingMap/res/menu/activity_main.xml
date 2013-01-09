@@ -19,8 +19,4 @@
         android:title="@string/menu_cycle_map_type"
         android:orderInCategory="104"
         android:showAsAction="ifRoom" />   
-    <item android:id="@+id/menu_quit"
-        android:title="@string/menu_quit"
-        android:orderInCategory="105"
-        android:showAsAction="ifRoom" />   
 </menu>

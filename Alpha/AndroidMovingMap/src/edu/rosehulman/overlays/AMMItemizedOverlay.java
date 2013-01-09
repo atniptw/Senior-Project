@@ -14,7 +14,7 @@ import android.graphics.drawable.Drawable;
 
 public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
-	// SETH did this cause he is bad and likes to make things public
+	// FIXME SETH did this cause he is bad and likes to make things public
 	public List<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Drawable mIcon;
 	private String mName;
