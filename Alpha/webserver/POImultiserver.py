@@ -2,7 +2,8 @@
 
 import json
 import socket
-import time
+import thread
+
 import datetime
 import math
 import random
@@ -57,46 +58,36 @@ drogo = POI(3, "Drogo",
 
 POIelements = {rose.UID:rose, fred.UID:fred, bob.UID:bob, drogo.UID:drogo}
 
-conn = 0
-s = 0
-def serverSocket():
-    global conn, s
-    HOST = ''                 # Symbolic name meaning all available interfaces
-    PORT = 5047              # Arbitrary non-privileged port
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((HOST, PORT))
-    s.listen(1)
-    conn, addr = s.accept()
 
-    print 'Connected by', addr, datetime.datetime.now()
+def serverSocket(connectionNumber, clientsocket, addr):
+    BUFFERSIZE = 1024
+    print "\tConnected by %s (connection %d)" %(addr, connectionNumber)
 
     dataBlock = 1
-    while 1:
-        data = conn.recv(1024)
-        if not data:
-            print "\nData empty - closing"
-            break
-        reply = data[:]
-
-        # start of socket (???) FIXME
-        if data in ('\xac\xed', '\x00\x05'):
-            print "DEBUG: recieved start of connection"
-            conn.sendall(reply)
-            continue
-
-        if data in ('t\x00\x06hello\n'):
-            print "DEBUG: recieved 'hello'"
-            conn.sendall('t\x00\x09ACKhello\n')
-            break
-
-    status = 1
-    messageNum = 1
     try:
+        while 1:
+            data = clientsocket.recv(BUFFERSIZE)
+            if not data:
+                print "\n\tData empty - closing %d" %(connectionNumber)
+                break
+
+            # start of socket (???) FIXME
+            if data in ('\xac\xed', '\x00\x05'):
+                print "\tDEBUG: recieved start of connection for #%d" %(connectionNumber)
+                clientsocket.sendall(data)
+                continue
+
+            if data == 't\x00\x06hello\n':
+                print "\tDEBUG: recieved 'hello' for connection %d" %(connectionNumber)
+                clientsocket.sendall('t\x00\x09ACKhello\n')
+                break
+
+        messageNum = 1
         while 1:
             jsonPOI = json.dumps({"POI":dict([(uid,value.toDict()) for uid,value in POIelements.items()])})
             length = len(jsonPOI)
 
-            print "sending ({0}): {1}".format(messageNum, "ommitted")
+            print "\tsending ({0}): {1} for connection {2}".format(messageNum, "ommitted", connectionNumber)
 
             conn.sendall('t' + chr(length/256) + chr(length%256) + jsonPOI)
 
@@ -104,38 +95,36 @@ def serverSocket():
             time.sleep(0.25 + (random.random() / 4.0))
 
     except KeyboardInterrupt:
-        print "broke by KeyboardInterrupt"
-        status = 0
+        print "\tbroke by KeyboardInterrupt (%d)" %(connectionNumber)
     except:
-        print "broke by some random exception or interrupt"
-        status = 1
+        print "\tbroke by some random exception or interrupt (%d)" %(connectionNumber)
 
-    conn.close()
-    time.sleep(0.5)
-    s.close()
-    time.sleep(0.5)
-    return status
+    clientsocket.close()
 
 
 def main():
-    
+    HOST = 'localhost'
+    PORT = 5047
+    ADDR = (HOST, PORT)
+
     try:
-        status = 1
-        while status:
-            status = serverSocket()
-#        server = HTTPServer(('', 8080), HelloWorldWeb)
-#        print "Hello World Wide Web..."
-#        server.serve_forever()
+        serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        serversock.bind(ADDR)
+        serversock.listen(2)
+
+        connectionNumber = 1
+        while 1:
+            print "waiting for connection (number %d)" %(connectionNumber)
+            clientsock, addr = serversock.accept()
+            print "\t%s at %s (connection %d)" %(addr, datetime.datetime.now(), connectionNumber)
+
+            thread.start_new_thread(serverSocket, (connectionNumber, clientsock, addr))
+
+            connectionNumber += 1
 
     except KeyboardInterrupt:
         print "Kill received, shutting down"
-        global conn, s
-        conn.close()
-        time.sleep(0.5)
-        s.close()
-        time.sleep(0.5)
-        print "killed connections"
-#        server.socket.close()
+        serversock.close()
 
 if __name__ == '__main__':
     main()
