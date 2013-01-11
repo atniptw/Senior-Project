@@ -34,7 +34,7 @@ import android.util.Log;
 
 @SuppressLint("UseSparseArrays")
 public class Server {
-	private static String connect_to = "192.168.1.106";
+	private static String connect_to = "queen.wlan.rose-hulman.edu";
 	private static int connect_port = 5047;
 
 	private static String message;
@@ -53,20 +53,21 @@ public class Server {
 		try {
 			JSONObject text = new JSONObject(data);
 			JSONObject POIelements = text.getJSONObject("POI");
-			Log.d("size of POIelements:", "" + POIelements.length());
+			Log.d("POIelements", "size: " + POIelements.length());
 	
 			JSONArray names = POIelements.names();
-			Log.d("POIelements names", "" + names);
+			Log.d("POIelements", "names: " + names);
 			
+			Log.d("test?", "test");
 			for (int i = 0; i < POIelements.length(); i++)
 			{
 				String UIDstring = names.getString(i);
 	
-//				Log.d("POIelement name", "" + UIDstring);
+				Log.d("POIelement", "name: " + UIDstring);
 				int UIDint = Integer.parseInt(UIDstring);
 	
 				JSONObject POIelement = POIelements.getJSONObject(UIDstring);
-//				Log.d("element " + UIDstring, "" + POIelement);
+				Log.d("POIelement", "element: " + POIelement);
 			
 				POI point = new POI(POIelement);
 				Server.POIelements.remove(UIDint);
@@ -90,7 +91,7 @@ public class Server {
 	  	{
 	  		try{
 	  			out.writeObject(msg);
-	  			Log.d("POI socket", "sending: |" + msg + "|");
+	  			Log.d("POI", "socket sending: |" + msg + "|");
 	  		}
 	  		catch(Exception e){
 	  			e.printStackTrace();
@@ -101,7 +102,7 @@ public class Server {
 	  		try{
 	  			//open a socket connecting us to the server
 	  			socket = new Socket(connect_to, connect_port);
-	  			Log.d("POI socket", "Connected!");
+	  			Log.d("POI", "Socket Connected!");
 
 	  			//create in and out streams
 	  			out = new ObjectOutputStream(socket.getOutputStream());
@@ -112,18 +113,18 @@ public class Server {
   					sendMessage("hello\n");
   					message = (String)in.readObject();
   					if (!message.equals("ACKhello\n"))
-  						Log.d("POI socket", "server did not ackHello instead recieved|" + message + "|");
+  						Log.d("POI", "socket server did not ackHello instead recieved|" + message + "|");
   					else
   					{
-  						Log.d("POI socket", "server replied ackHello");
+  						Log.d("POI", "socket server replied ackHello");
 
 	  					while (!this.stopThread)
 	  					{
 	  	  					message = (String)in.readObject();
-	  						Log.d("POI socket",  "server says: omitted"); //" + message);
+	  						Log.d("POI",  "socket server says: omitted"); //" + message);
 	  						if (Server.updatePOIFromString(message))
 	  						{
-	  							Log.d("POI socket", "dispatching updateDisplay handler");
+	  							Log.d("POI", "socket dispatching updateDisplay handler");
 	  							updatePOIHandler.sendMessage(updatePOIHandler.obtainMessage());
 	  						}
 	  						Thread.sleep(50);

@@ -5,23 +5,25 @@ import socket
 import thread
 
 import datetime
+import time
 import math
 import random
 
 class POI:
-    def __init__(self, UID, name, latitude, longitude, POItype = 0):
+    def __init__(self, UID, name, latitude, longitude, attributes = {}, POItype = 0):
         self.UID = UID
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
         self.POItype = POItype
+        self.attributes = attributes
 
     def toDict(self):
         return {"UID":str(self.UID),
                 "name":str(self.name), 
                 "latitude":str(self.latitude(time.time())),
                 "longitude":str(self.longitude(time.time())),
-                "type":str(self.POItype)}
+                "type":str(self.POItype)}# + attributes
 
     def getUID(self):
         return self.UID
@@ -45,16 +47,24 @@ class POI:
 
 rose = POI(0, "Rose",
     lambda t:40.0,
-    lambda t:-88.0, 0)
+    lambda t:-88.0, 
+    {"desc":"rose"},
+    0)
 fred = POI(1, "Fred",
     lambda t: 10*math.cos(6.28*t/10.0),
-    lambda t:0, 0)
+    lambda t:0,
+    {},
+    0)
 bob = POI(2, "Bob",
     lambda t:0,
-    lambda t: 10*math.sin(6.28*t/15.0), 0)
+    lambda t: 10*math.sin(6.28*t/15.0),
+    {"describtion":"Bob"},
+    0)
 drogo = POI(3, "Drogo",
     lambda t:-25+15*math.sin(6.28*t/15.0),
-    lambda t:45+20*math.cos(6.28*t/15.0), 0)
+    lambda t:45+20*math.cos(6.28*t/15.0),
+    {"manlevel":"15"},
+    0)
 
 POIelements = {rose.UID:rose, fred.UID:fred, bob.UID:bob, drogo.UID:drogo}
 
@@ -89,28 +99,29 @@ def serverSocket(connectionNumber, clientsocket, addr):
 
             print "\tsending ({0}): {1} for connection {2}".format(messageNum, "ommitted", connectionNumber)
 
-            conn.sendall('t' + chr(length/256) + chr(length%256) + jsonPOI)
+            clientsocket.sendall('t' + chr(length/256) + chr(length%256) + jsonPOI)
 
             messageNum += 1
             time.sleep(0.25 + (random.random() / 4.0))
 
     except KeyboardInterrupt:
         print "\tbroke by KeyboardInterrupt (%d)" %(connectionNumber)
-    except:
+    except Exception as e:
         print "\tbroke by some random exception or interrupt (%d)" %(connectionNumber)
+        print e
 
     clientsocket.close()
 
 
 def main():
-    HOST = 'localhost'
+    HOST = ''   # what to allow connections from
     PORT = 5047
     ADDR = (HOST, PORT)
 
     try:
         serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         serversock.bind(ADDR)
-        serversock.listen(2)
+        serversock.listen(1)
 
         connectionNumber = 1
         while 1:

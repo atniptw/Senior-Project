@@ -36,8 +36,6 @@ import android.widget.Button;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
-import edu.rosehulman.overlays.AMMOverlayManager;
-import edu.rosehulman.overlays.AddOverlayDialogFragment;
 import edu.rosehulman.overlays.AddPOITypeDialogFragment;
 import edu.rosehulman.server.POI;
 import edu.rosehulman.server.Server;
