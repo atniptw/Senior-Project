@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/add_poi_type"
+        android:title="Add POI Type"
+        android:showAsAction="ifRoom" />
+        android:orderInCategory="101"
+    <item android:id="@+id/menu_start_stop_sync"
+        android:title="@string/menu_start_stop_sync"
+        android:orderInCategory="102"
+        android:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_display"
+        android:title="@string/menu_display"
+        android:orderInCategory="103"
+        android:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_cycle_map_type"
+        android:title="@string/menu_cycle_map_type"
+        android:orderInCategory="104"
+        android:showAsAction="ifRoom" />   
+</menu>

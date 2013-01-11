@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">OSMDroidTest</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="button_send">Send (Button)!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_start_stop_sync">Sync with Server</string>
+    <string name="menu_display">Sync POI to map</string>
+    <string name="menu_cycle_map_type">Cycle map type</string>
+	<string name="menu_quit">Quit</string>
+    <string name="title_activity_main">MainActivity</string>
+
+</resources>

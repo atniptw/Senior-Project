@@ -1,0 +1,7 @@
+package edu.rosehulman.maps;
+
+import org.osmdroid.views.MapView;
+
+public class OSMMapView extends MapView {
+
+}
