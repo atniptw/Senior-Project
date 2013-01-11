@@ -53,21 +53,19 @@ public class Server {
 		try {
 			JSONObject text = new JSONObject(data);
 			JSONObject POIelements = text.getJSONObject("POI");
-			Log.d("POIelements", "size: " + POIelements.length());
 	
 			JSONArray names = POIelements.names();
-			Log.d("POIelements", "names: " + names);
+			Log.d("POIelements", "size: " + POIelements.length() + " | names: " + names);
 			
-			Log.d("test?", "test");
 			for (int i = 0; i < POIelements.length(); i++)
 			{
 				String UIDstring = names.getString(i);
 	
-				Log.d("POIelement", "name: " + UIDstring);
+//				Log.d("POIelement", "name: " + UIDstring);
 				int UIDint = Integer.parseInt(UIDstring);
 	
 				JSONObject POIelement = POIelements.getJSONObject(UIDstring);
-				Log.d("POIelement", "element: " + POIelement);
+//				Log.d("POIelement", "element: " + POIelement);
 			
 				POI point = new POI(POIelement);
 				Server.POIelements.remove(UIDint);

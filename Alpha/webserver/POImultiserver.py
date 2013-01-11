@@ -11,36 +11,35 @@ import random
 
 class POI:
     def __init__(self, UID, name, latitude, longitude, attributes = {}, POItype = 0):
-        self.UID = UID
-        self.name = name
-        self.latitude = latitude
-        self.longitude = longitude
-        self.POItype = POItype
         self.attributes = attributes
+        self.attributes["UID"] = UID
+        self.attributes["name"] = name
+        self.latitudeF = latitude
+        self.longitudeF = longitude
+        self.attributes["POItype"] = POItype
 
     def toDict(self):
-        return {"UID":str(self.UID),
-                "name":str(self.name), 
-                "latitude":str(self.latitude(time.time())),
-                "longitude":str(self.longitude(time.time())),
-                "type":str(self.POItype)}# + attributes
+        newAttr = self.attributes
+        newAttr["latitude"] = self.latitudeF(time.time())
+        newAttr["longitude"] = self.longitudeF(time.time())
+        return newAttr
 
     def getUID(self):
-        return self.UID
+        return self.attributes["UID"]
 
     def getName(self):
-        return self.name
+        return self.attributes["name"]
 
     def __eq__(self, other):
         if type(other) is type(self):
-            return self.UID == other.UID
+            return self.getUID() == other.getUID()
         return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return self.UID
+        return self.getUID()
 
     def __repr__(self):
         return str(self.toDict())
@@ -66,7 +65,10 @@ drogo = POI(3, "Drogo",
     {"manlevel":"15"},
     0)
 
-POIelements = {rose.UID:rose, fred.UID:fred, bob.UID:bob, drogo.UID:drogo}
+POIelements = {rose.getUID():rose, 
+                fred.getUID():fred,
+                bob.getUID():bob,
+                drogo.getUID():drogo}
 
 
 def serverSocket(connectionNumber, clientsocket, addr):

@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
+import android.util.Log;
+
 public class POI {
     private final int UID;
     private String name;
@@ -18,12 +20,14 @@ public class POI {
 
     public POI(JSONObject data) throws JSONException
     {
+//    	Log.d("POI","parse:" + data);
+
     	this.UID = data.getInt("UID"); data.remove("UID");
     	this.name = data.getString("name"); data.remove("name");
     	this.latitude = data.getDouble("latitude"); data.remove("name");
     	this.longitude = data.getDouble("longitude"); data.remove("longitude");
     	this.attributes = new HashMap<String,String>();
-    	
+
         Iterator i = data.keys();
         while (i.hasNext()) {
             try {
