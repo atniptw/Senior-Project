@@ -11,8 +11,8 @@
         android:title="@string/menu_start_stop_sync"
         android:orderInCategory="102"
         android:showAsAction="ifRoom" />
-    <item android:id="@+id/menu_display"
-        android:title="@string/menu_display"
+    <item android:id="@+id/menu_push_server"
+        android:title="@string/menu_push_server"
         android:orderInCategory="103"
         android:showAsAction="ifRoom" />
     <item android:id="@+id/menu_cycle_map_type"

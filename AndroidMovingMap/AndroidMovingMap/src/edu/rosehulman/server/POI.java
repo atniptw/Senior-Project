@@ -60,7 +60,45 @@ public class POI {
 	{
 		return new GeoPoint(this.latitude, this.longitude);
 	}
-		
+	
+	public String toJSONString()
+	{
+/*	    private final int UID;
+	    private String name;
+	    private double latitude;
+	    private double longitude;
+	    private int POItype;
+	    private Map<String,String> attributes;
+
+*/
+		JSONObject data = new JSONObject();
+		try {
+			data.put("UID", this.UID);
+			data.put("name", this.name);
+			data.put("latitude", this.latitude);
+			data.put("longitude", this.longitude);
+		} catch (JSONException e) {
+			Log.d("POI", "toJSONString error");
+			e.printStackTrace();
+		}
+
+/*
+		this.attributes = new HashMap<String,String>();
+
+        Iterator i = data.keys();
+        while (i.hasNext()) {
+            try {
+                String key = i.next().toString();
+                String value = data.getString(key);
+                this.attributes.put(key, value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+*/
+		return data.toString();
+	}
+	
     public String toString()
     {
     	String data = "POI:\n";

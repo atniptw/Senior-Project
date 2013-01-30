@@ -1,9 +1,12 @@
 package edu.rosehulman.androidmovingmap;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -94,6 +97,10 @@ public class MainActivity extends Activity implements OnClickListener,
 		mPOITypeButton.setOnClickListener(this);
 
     	mMapView.getAMMOverlayManager().addCustomOverlay(server_poi_name);	
+
+		POIThread = server.new ListenPOISocket();
+		POIThread.updatePOIHandler = invalidateDisplay;
+		POIThread.start();
 	}
 
 	@Override
@@ -125,6 +132,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			mMapView.invalidate();
 			return true;
 		} else if (itemId == R.id.menu_start_stop_sync) {
+/*
 			if (this.POIThread == null)
         	{
         		this.POIThread = this.server.new ListenPOISocket();
@@ -135,9 +143,19 @@ public class MainActivity extends Activity implements OnClickListener,
             	this.POIThread.stopThread = true;
             	this.POIThread = null;
         	}
+*/
+			POIThread.pullFrom = !POIThread.pullFrom;
 			return true;
-		} else if (itemId == R.id.menu_display) {
-			this.updatePOIandScreen();
+
+		} else if (itemId == R.id.menu_push_server) {
+//			POIThread.pushTo = true;
+			try {
+				Log.d("POI", "attepmting to send");
+				POI testPOI = new POI(123, "new", 1.0, -1.0, 1, new TreeMap<String,String>());
+				POIThread.sendMessage(testPOI.toJSONString() + "\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -182,9 +200,12 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onStop();
 		locationManager.removeUpdates(listener);
 
-		//TODO seth should test
-    	this.POIThread.stopThread = true;
-    	this.POIThread = null;
+		//TODO Seth should test
+		if (this.POIThread != null)
+		{
+			this.POIThread.stopThread = true;
+			this.POIThread = null;
+		}
 	}
 
 	private void enableLocationSettings() {
