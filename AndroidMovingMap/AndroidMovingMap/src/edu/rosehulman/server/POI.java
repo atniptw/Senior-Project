@@ -77,6 +77,7 @@ public class POI {
 			data.put("name", this.name);
 			data.put("latitude", this.latitude);
 			data.put("longitude", this.longitude);
+			data.put("POItype", this.POItype);
 		} catch (JSONException e) {
 			Log.d("POI", "toJSONString error");
 			e.printStackTrace();

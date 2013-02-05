@@ -40,13 +40,26 @@ import android.util.Log;
 
 @SuppressLint("UseSparseArrays")
 public class Server {
-	private static String connect_to = "queen.wlan.rose-hulman.edu";
-	private static int connect_port = 5047;
-
-	private static String message;
-	public static Map<Integer,POI> POIelements = new HashMap<Integer,POI>();
+	private static Server instance = null;
 	
-	public static boolean updatePOIFromString(String data)
+	private final static String connect_to = "queen.wlan.rose-hulman.edu";
+	private final static int connect_port = 5047;
+
+	public Map<Integer,POI> POIelements = new HashMap<Integer,POI>();
+  	public static Handler updatePOIHandler;
+
+	private Server() { ; }
+
+	public static Server getInstance()
+	{
+		if (Server.instance == null)
+		{
+			Server.instance = new Server();
+		}
+		return Server.instance;
+	}
+	
+	public boolean updatePOIFromString(String data)
 	{
 		try {
 			JSONObject text = new JSONObject(data);
@@ -66,8 +79,8 @@ public class Server {
 //				Log.d("POIelement", "element: " + POIelement);
 			
 				POI point = new POI(POIelement);
-				Server.POIelements.remove(UIDint);
-				Server.POIelements.put(UIDint, point);
+				this.POIelements.remove(UIDint);
+				this.POIelements.put(UIDint, point);
 			}
 			return true;
 		} catch (JSONException e) {
@@ -76,27 +89,65 @@ public class Server {
 		}
 	}
 	
-	public class ListenPOISocket extends Thread {
+  	public void sendMessage(String msg) throws IOException
+  	{
+  		ListenPOISocket.getInstance().sendMessage(msg);
+  	}
+
+  	public void stopServer()
+  	{
+	  	if (ListenPOISocket.instance != null)
+		{
+	  		ListenPOISocket.instance.stopThread = true;
+	  		ListenPOISocket.instance = null;
+		}
+  	}
+
+  	public void startServer()
+  	{
+  		ListenPOISocket.getInstance();
+  	}
+
+  	public boolean serverRunning()
+  	{
+  		return ListenPOISocket.instance != null;
+  	}
+  	
+  	protected static class ListenPOISocket extends Thread {
+		private static ListenPOISocket instance = null;
 		private Socket socket;
 	   	private DataInputStream in;
         private DataOutputStream out;
-	  	public Handler updatePOIHandler;
 	  	public volatile boolean stopThread = false;
 	  	public volatile boolean pullFrom = false;
 	  	public volatile boolean pushTo = false;
 	  	
+	  	private ListenPOISocket() { ; }
+	  	{
+	  	}
+
+	  	public static ListenPOISocket getInstance()
+	  	{
+	  		if (ListenPOISocket.instance == null)
+	  		{
+		  		ListenPOISocket.instance = new ListenPOISocket();
+		  		ListenPOISocket.instance.start();
+	  		}
+	  		return ListenPOISocket.instance;
+	  	}
+
 	  	public void sendMessage(String msg) throws IOException
 	  	{
 	  		Log.d("POI", "sending message: '" + msg + "'");
 	  		out.writeBytes(msg);
-  			out.flush();
+			out.flush();
 	  		Log.d("POI", "sent");
 	  	}
 
 	  	private String getMessage() throws IOException
 	  	{
-  			String msg = in.readLine();
-  			return msg;
+			String msg = in.readLine();
+			return msg;
 	  	}
 
 	  	public void run() {
@@ -113,9 +164,7 @@ public class Server {
 	  			Log.d("POI", "socket streams converted");
 
 	  			sendMessage("hello\n");
-				//socket.close();
-
-				message = getMessage();
+				String message = getMessage();
 				if (!message.equals("ACKhello"))
 				{
 					Log.d("POI", "socket server did not ackHello instead received |" + message + "|");
@@ -129,17 +178,19 @@ public class Server {
 				while ( !this.stopThread )
 				{
 					Thread.sleep(50);
-					
-					if (this.pullFrom)
+
+					Log.d("POI", "waiting on message");
+					message = getMessage();
+					Log.d("POI", "got message");
+					if (message == null)
 					{
-						Log.d("POI", "waiting on message");
-						String message = getMessage();
-					    Log.d("POI",  "socket server says: omitted"); //" + message);
-						if (Server.updatePOIFromString(message))
-						{
-							Log.d("POI", "socket dispatching updateDisplay handler");
-							updatePOIHandler.sendMessage(updatePOIHandler.obtainMessage());
-						}
+						break;
+					}
+				    Log.d("POI",  "socket server says: omitted"); //" + message);
+					if (Server.getInstance().updatePOIFromString(message))
+					{
+						Log.d("POI", "socket dispatching updateDisplay handler");
+						Server.updatePOIHandler.sendMessage(Server.updatePOIHandler.obtainMessage());
 					}
 				};
 			} catch (UnknownHostException e) {

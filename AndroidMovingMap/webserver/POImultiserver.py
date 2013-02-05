@@ -39,7 +39,7 @@ class ServerSocket(threading.Thread):
                     continue
 
                 if dataCombined == "hello\n":
-                    print "\tSS DEBUG(%d): received 'hello' time to ACK" %(self.connectionNumber)
+                    print "\tSS DEBUG(%d): received 'hello', time to ACK" %(self.connectionNumber)
                     self.clientsocket.sendall("ACKhello\n")
                     break
 
@@ -90,14 +90,14 @@ class ServerSocket(threading.Thread):
         try:
             print "\tin POISocketSender"
             messageNum = 1
-            while messageNum < 10:
+            while True:
                 jsonPOI = json.dumps({"POI":dict([(uid,value.toDict()) for uid,value in POIelements.items()])})
 
                 print "\tSS sending ({0}): {1} for connection {2}".format(messageNum, "ommitted", self.connectionNumber)
                 self.clientsocket.sendall(jsonPOI + "\n")
 
                 messageNum += 1
-                time.sleep(10.25 + (random.random() / 4.0))
+                time.sleep(6.25 + (random.random() / 4.0))
         except KeyboardInterrupt:
             print "\tPSS broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
         except Exception as e:
