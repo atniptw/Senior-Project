@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -50,8 +51,6 @@ public class MainActivity extends Activity implements OnClickListener,
 	private LocationManager locationManager;
 	private Button mPOITypeButton;
 
-	private Server server = new Server();
-	private Server.ListenPOISocket POIThread = null;
 	private String server_poi_name = "POI_from_server";
 
 	private XYTileSource tileSource;
@@ -98,9 +97,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
     	mMapView.getAMMOverlayManager().addCustomOverlay(server_poi_name);	
 
-		POIThread = server.new ListenPOISocket();
-		POIThread.updatePOIHandler = invalidateDisplay;
-		POIThread.start();
+		Server.getInstance().updatePOIHandler = invalidateDisplay;
 	}
 
 	@Override
@@ -132,27 +129,34 @@ public class MainActivity extends Activity implements OnClickListener,
 			mMapView.invalidate();
 			return true;
 		} else if (itemId == R.id.menu_start_stop_sync) {
-/*
-			if (this.POIThread == null)
+			if (Server.getInstance().serverRunning())
         	{
-        		this.POIThread = this.server.new ListenPOISocket();
-        		this.POIThread.updatePOIHandler = this.invalidateDisplay;
-        		this.POIThread.start();
+        		Server.getInstance().stopServer();
         	} else
         	{
-            	this.POIThread.stopThread = true;
-            	this.POIThread = null;
+        		Server.getInstance().startServer();
         	}
-*/
-			POIThread.pullFrom = !POIThread.pullFrom;
 			return true;
-
 		} else if (itemId == R.id.menu_push_server) {
 //			POIThread.pushTo = true;
 			try {
-				Log.d("POI", "attepmting to send");
-				POI testPOI = new POI(123, "new", 1.0, -1.0, 1, new TreeMap<String,String>());
-				POIThread.sendMessage(testPOI.toJSONString() + "\n");
+				Log.d("POI", "attempting to send");
+		    	for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlayTypes())
+		    	{
+		   			if (type.getName() != server_poi_name)
+		    		{
+		   				for (OverlayItem mapItem : type.mOverlays)
+		   				{
+		   					POI point = new POI(-1,
+		   							"test",
+		   							mapItem.getPoint().getLatitudeE6() / 1000000.0,
+		   							mapItem.getPoint().getLongitudeE6() / 1000000.0,
+		   							type.hashCode(),
+		   							new HashMap<String, String>());
+		   					Server.getInstance().sendMessage(point.toJSONString() + "\n");
+		   				}
+		   			}
+		    	}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -199,13 +203,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	protected void onStop() {
 		super.onStop();
 		locationManager.removeUpdates(listener);
-
-		//TODO Seth should test
-		if (this.POIThread != null)
-		{
-			this.POIThread.stopThread = true;
-			this.POIThread = null;
-		}
+		Server.getInstance().stopServer();
 	}
 
 	private void enableLocationSettings() {
@@ -259,7 +257,7 @@ public class MainActivity extends Activity implements OnClickListener,
     	}
     	server_poi_type.mOverlays.clear();
 	
-    	for (POI point : Server.POIelements.values())
+    	for (POI point : Server.getInstance().POIelements.values())
     	{
 			server_poi_type.addOverlay(new OverlayItem("lol", "teehee", point.getGeoPoint()));
     	}
