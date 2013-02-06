@@ -8,6 +8,8 @@ import org.osmdroid.api.IMapView;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import edu.rosehulman.server.POI;
+
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -15,7 +17,7 @@ import android.graphics.drawable.Drawable;
 public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	// FIXME SETH did this cause he is bad and likes to make things public
-	public List<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+	public List<POI> mOverlays = new ArrayList<POI>();
 	private Drawable mIcon;
 	private String mName;
 	private boolean mActive;
@@ -28,7 +30,7 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		mActive = true;
 	}
 	
-	public void addOverlay(OverlayItem overlay) {
+	public void addOverlay(POI overlay) {
 		mOverlays.add(overlay);
 		populate();
 	}

@@ -91,6 +91,14 @@ public class Server {
 	
   	public void sendMessage(String msg) throws IOException
   	{
+  		try
+  		{
+	  		while (ListenPOISocket.getInstance().acked != true)
+	  		{
+				Thread.sleep(50); // TODO FIXME locks up main thread???
+	  		}	  			
+  		} catch (InterruptedException e) {
+		}
   		ListenPOISocket.getInstance().sendMessage(msg);
   	}
 
@@ -118,11 +126,15 @@ public class Server {
 		private Socket socket;
 	   	private DataInputStream in;
         private DataOutputStream out;
-	  	public volatile boolean stopThread = false;
+
+        public volatile boolean acked = false;
+
+        public volatile boolean stopThread = false;
 	  	public volatile boolean pullFrom = false;
 	  	public volatile boolean pushTo = false;
 	  	
-	  	private ListenPOISocket() { ; }
+	  	
+	  	private ListenPOISocket()
 	  	{
 	  	}
 
@@ -137,11 +149,11 @@ public class Server {
 	  	}
 
 	  	public void sendMessage(String msg) throws IOException
-	  	{
+	  	{  		
 	  		Log.d("POI", "sending message: '" + msg + "'");
-	  		out.writeBytes(msg);
-			out.flush();
-	  		Log.d("POI", "sent");
+  			out.writeBytes(msg);
+  			out.flush();
+  			Log.d("POI", "sent");
 	  	}
 
 	  	private String getMessage() throws IOException
@@ -161,9 +173,7 @@ public class Server {
 	            out = new DataOutputStream(socket.getOutputStream());
 	            in = new DataInputStream(socket.getInputStream());
 
-	  			Log.d("POI", "socket streams converted");
-
-	  			sendMessage("hello\n");
+	  			sendMessage("hello");
 				String message = getMessage();
 				if (!message.equals("ACKhello"))
 				{
@@ -174,6 +184,7 @@ public class Server {
 				{
 					Log.d("POI", "socket server replied ackHello");
 				}
+		  		this.acked = true;
 				
 				while ( !this.stopThread )
 				{
@@ -203,7 +214,7 @@ public class Server {
 	  		finally
 			{
 				try {
-					Log.d("POI", "in finally"); 
+					Log.d("POI", "in finally");
 					if (socket != null)
 						socket.close();
 					if (in != null)

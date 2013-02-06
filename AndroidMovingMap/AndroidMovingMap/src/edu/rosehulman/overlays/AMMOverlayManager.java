@@ -8,6 +8,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import edu.rosehulman.androidmovingmap.R;
 
 public class AMMOverlayManager implements Serializable {
@@ -27,6 +28,7 @@ public class AMMOverlayManager implements Serializable {
 	
 	private void initializeOverlayTypes() {
 		overlayTypes = new HashMap<OverlayTypes, AMMItemizedOverlay>();
+		
 		Resources resources = this.context.getResources();
 		overlayTypes.put( OverlayTypes.TYPE_1, 
 						  new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_1), 

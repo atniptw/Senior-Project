@@ -27,24 +27,18 @@ class ServerSocket(threading.Thread):
     def run(self):
         dataBlock = 1
         try:
-            dataCombined = ""
             while 1:
                 data = self.clientsocket.recv(BUFFERSIZE)
                 if not data:
                     print "\n\tSS Data empty - closing %d" %(self.connectionNumber)
                     break
 
-                dataCombined += data
-                if '\n' not in data:
-                    continue
-
-                if dataCombined == "hello\n":
+                if data == "hello":
                     print "\tSS DEBUG(%d): received 'hello', time to ACK" %(self.connectionNumber)
                     self.clientsocket.sendall("ACKhello\n")
                     break
 
                 print "\tSS DEBUG(%d): got '%s' <> 'hello'" %(self.connectionNumber, dataCombined)
-                data = ""
 
             t1 = threading.Thread(target = self.POISocketListener)
             t1.start()

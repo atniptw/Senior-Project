@@ -15,6 +15,8 @@ class POI:
 
             if len(args) >= 5:
                 self.attributes["POItype"] = args[4]
+            else:
+                self.attributes["POItype"] = "type 0"
 
             self.attributes["UID"] = args[0]
             self.attributes["name"] = args[1]
@@ -25,7 +27,7 @@ class POI:
             self.attributes = {}
             self.attributes["UID"] = -1
             self.attributes["name"] = "BAD NAME"
-            self.attributes["POItype"] = -1
+            self.attributes["POItype"] = "type 0"
             self.attributes["latitude"] = 0
             self.attributes["longitude"] = 0
 

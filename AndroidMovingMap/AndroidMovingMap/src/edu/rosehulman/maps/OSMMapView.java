@@ -1,5 +1,7 @@
 package edu.rosehulman.maps;
 
+import java.util.HashMap;
+
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -22,6 +24,7 @@ import android.widget.ListView;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
 import edu.rosehulman.overlays.AMMOverlayManager;
 import edu.rosehulman.overlays.OverlayListAdapter;
+import edu.rosehulman.server.POI;
 
 public class OSMMapView extends MapView {
 
@@ -118,7 +121,11 @@ public class OSMMapView extends MapView {
 		public void onItemClick(AdapterView<?> parent, View view, int pos,
 				long id) {
 			AMMItemizedOverlay overlayType = (AMMItemizedOverlay) mOverlayListView.getItemAtPosition(pos);
-			overlayType.addOverlay(new OverlayItem("lol", "teehee", mLocation));
+			overlayType.addOverlay(new POI(-2, "local",
+					mLocation.getLatitudeE6() / 1000000.0,
+					mLocation.getLongitudeE6() / 1000000.0,
+					overlayType.getName(),
+					new HashMap<String, String>()));
 			invalidate();
 			dismiss();
 		}

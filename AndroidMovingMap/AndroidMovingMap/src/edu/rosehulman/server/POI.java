@@ -7,27 +7,29 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import android.util.Log;
 
-public class POI {
+public class POI extends OverlayItem {
     private final int UID;
     private String name;
     private double latitude;
     private double longitude;
-    private int POItype;
+    private String POItype;
     private Map<String,String> attributes;
 
     public POI(JSONObject data) throws JSONException
     {
-//    	Log.d("POI","parse:" + data);
+		super(data.getString("name"), "", new GeoPoint(data.getDouble("latitude"), data.getDouble("longitude")));
 
     	this.UID = data.getInt("UID"); data.remove("UID");
     	this.name = data.getString("name"); data.remove("name");
     	this.latitude = data.getDouble("latitude"); data.remove("name");
     	this.longitude = data.getDouble("longitude"); data.remove("longitude");
+    	this.POItype = data.getString("POItype"); data.remove("POItype");
     	this.attributes = new HashMap<String,String>();
-
+    	
         Iterator i = data.keys();
         while (i.hasNext()) {
             try {
@@ -40,8 +42,10 @@ public class POI {
         }
    	}
 
-	public POI(int UID, String name, double latitude, double longitude, int POItype, Map<String,String> attributes)
+	public POI(int UID, String name, double latitude, double longitude, String POItype, Map<String,String> attributes)
     {
+		super(name, "", new GeoPoint(latitude, longitude));
+		
     	this.UID = UID;
     	this.name = name;
     	this.latitude = latitude;
@@ -54,6 +58,11 @@ public class POI {
 	public int getUID()
 	{
 		return this.UID;
+	}
+	
+	public String getType()
+	{
+		return this.POItype;
 	}
 	
 	public GeoPoint getGeoPoint()
