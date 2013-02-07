@@ -1,4 +1,4 @@
-package edu.rosehulman.overlays;
+package edu.rosehulman.androidmovingmap;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -6,13 +6,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import edu.rosehulman.overlays.IOverlayManager;
 
 public class AddOverlayDialogFragment extends DialogFragment {
 	
-	private AMMOverlayManager mOverlayManager;
+	private IOverlayManager mOverlayManager;
 	private ListView mOverlayListView;
 	
-	public AddOverlayDialogFragment(AMMOverlayManager manager, Context context) {
+	public AddOverlayDialogFragment(IOverlayManager manager, Context context) {
 		this.mOverlayManager = manager;
 		mOverlayListView = new ListView(context);
 	}
@@ -22,9 +23,9 @@ public class AddOverlayDialogFragment extends DialogFragment {
 		final Dialog dialog = new Dialog(getActivity());
 		
 		dialog.setContentView(mOverlayListView);
-//		BaseAdapter adapter = new OverlayListAdapter(getActivity(), mOverlayManager);
+		BaseAdapter adapter = new OverlayListAdapter(getActivity(), mOverlayManager);
 		
-//		mOverlayListView.setAdapter(adapter);
+		mOverlayListView.setAdapter(adapter);
 
 		return dialog;
 	}

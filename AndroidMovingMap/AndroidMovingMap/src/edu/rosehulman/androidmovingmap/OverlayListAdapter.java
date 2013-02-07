@@ -1,4 +1,4 @@
-package edu.rosehulman.overlays;
+package edu.rosehulman.androidmovingmap;
 
 import java.util.List;
 
@@ -12,14 +12,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.rosehulman.androidmovingmap.R;
+import edu.rosehulman.overlays.AMMItemizedOverlay;
+import edu.rosehulman.overlays.IOverlayManager;
 
 public class OverlayListAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private List<AMMItemizedOverlay> mOverlays;
 	
-	public OverlayListAdapter(Context context, AMMOverlayManager manager) {
+	public OverlayListAdapter(Context context, IOverlayManager manager) {
 		this.mContext = context;
 		this.mOverlays = manager.getOverlayTypes();
 	}

@@ -1,6 +1,8 @@
-package edu.rosehulman.overlays;
+package edu.rosehulman.androidmovingmap;
 
 import java.io.Serializable;
+
+import edu.rosehulman.overlays.AMMOverlayManager;
 
 import android.app.DialogFragment;
 import android.content.Context;
