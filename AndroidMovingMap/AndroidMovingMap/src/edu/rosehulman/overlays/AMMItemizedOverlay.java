@@ -1,5 +1,6 @@
 package edu.rosehulman.overlays;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +13,10 @@ import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 
-public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
+public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> implements Serializable {
 
 	// FIXME SETH did this cause he is bad and likes to make things public
-	public List<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+	private List<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Drawable mIcon;
 	private String mName;
 	private boolean mActive;
@@ -46,6 +47,10 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public int size() {
 		return mOverlays.size();
+	}
+	
+	public void clear() {
+		mOverlays.clear();
 	}
 	
 	public Drawable getIcon() {

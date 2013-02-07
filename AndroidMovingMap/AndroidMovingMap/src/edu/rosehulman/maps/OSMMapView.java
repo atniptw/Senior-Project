@@ -1,38 +1,50 @@
 package edu.rosehulman.maps;
 
+import java.io.Serializable;
+
+import org.metalev.multitouch.controller.MultiTouchController;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.OverlayItem;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import edu.rosehulman.androidmovingmap.AddPOIActivity;
+import edu.rosehulman.androidmovingmap.OverlayListAdapter;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
 import edu.rosehulman.overlays.AMMOverlayManager;
-import edu.rosehulman.overlays.OverlayListAdapter;
 
 public class OSMMapView extends MapView {
 
 	private Context mContext;
 	private AMMOverlayManager mOverlayManager;
+
+	AMMGestureListener mGestureListener = new AMMGestureListener(this);
+	GestureDetector mLongPressListener;
+	TransformationData transform = new TransformationData();
+	
+	int centerX, centerY;
 	
 	public OSMMapView(Context context, int tileSizePixels) {
 		super(context, tileSizePixels);
-//		setWillNotDraw(false);
+		setWillNotDraw(false);
 		mOverlayManager = new AMMOverlayManager(context);
 		mContext = context;
+		mLongPressListener = new GestureDetector(context, new LongPressGestureListener());
 		getOverlays().addAll(mOverlayManager.getOverlayTypes());
 	}
 	
@@ -41,6 +53,7 @@ public class OSMMapView extends MapView {
 		setWillNotDraw(false);
 		mOverlayManager = new AMMOverlayManager(context);
 		mContext = context;
+		mLongPressListener = new GestureDetector(context, new LongPressGestureListener());
 	}
 	
 	@Override
@@ -49,48 +62,48 @@ public class OSMMapView extends MapView {
 		getOverlays().addAll(mOverlayManager.getOverlayTypes());
 	}
 	
-	private float rotation;
-	private float pivotX, pivotY;
 	@Override
 	protected void onDraw(Canvas canvas) {
-		// TODO Auto-generated method stub
 //		canvas.save();
-		canvas.rotate(rotation);
+		
+		canvas.rotate(transform.getRotation());
+		canvas.scale(transform.getZoom(), transform.getZoom(), centerX, centerY);
+		Log.d("transform", "My zoom scale factor is " + transform.getZoom());
 		super.onDraw(canvas);
 //		canvas.restore();
 	}
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-		int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+		int parentWidth = (int) (MeasureSpec.getSize(widthMeasureSpec));
+		int parentHeight = (int) (MeasureSpec.getSize(heightMeasureSpec));
+		centerX = parentWidth/2;
+		centerY = parentWidth/2;
 		this.setMeasuredDimension(parentWidth, parentHeight);
 	};
 	
-	RotationGestureListener blah = new RotationGestureListener();
+	private MultiTouchController<Object> multiTouchController = new MultiTouchController<Object>(mGestureListener);
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-//		return blah.onTouchEvent(event);
-		return mGestureDetector.onTouchEvent(event);
+		if (mLongPressListener.onTouchEvent(event)) {
+			return true;
+		}
+		if (multiTouchController.onTouchEvent(event)) {
+			invalidate();
+			return true;
+		}
+		if (super.onTouchEvent(event)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public AMMOverlayManager getAMMOverlayManager() {
 		return mOverlayManager;
-	}
-	
-	SimpleOnGestureListener mSimpleOnGestureListener = new SimpleOnGestureListener() {
-		public void onLongPress(MotionEvent e) {
-			GeoPoint location = (GeoPoint) getProjection().fromPixels(e.getX(), e.getY());
-			DialogFragment addOverlayFragment = new AddOverlayDialogFragment(mOverlayManager, location, mContext);
-			addOverlayFragment.show(((Activity)mContext).getFragmentManager(), "dialog");
-		};
-	};
-	private GestureDetector mGestureDetector = new GestureDetector(mContext, mSimpleOnGestureListener);
-	
-	
+	}	
 	
 	class AddOverlayDialogFragment extends DialogFragment implements OnItemClickListener {
-		
+		//TODO Extract this
 		private AMMOverlayManager mOverlayManager;
 		private ListView mOverlayListView;
 		private GeoPoint mLocation;
@@ -124,83 +137,47 @@ public class OSMMapView extends MapView {
 		}
 	}
 	
-	private class RotationGestureListener  {
-		
-		private static final int INVALID_POINTER_ID = -1;
-		private float fX, fY, sX, sY, focalX, focalY;
-		private int pointerID1, pointerID2;
-		
-		public RotationGestureListener() {
-			pointerID1 = INVALID_POINTER_ID;
-			pointerID2 = INVALID_POINTER_ID;
+	private class LongPressGestureListener extends GestureDetector.SimpleOnGestureListener {
+		@Override
+		public void onLongPress(MotionEvent e) {
+			GeoPoint location = (GeoPoint)getProjection().fromPixels(e.getX(), e.getY());
+			Intent addPoiIntent = new Intent(mContext, AddPOIActivity.class);
+			addPoiIntent.putExtra(AddPOIActivity.KEY_GEOPOINT, (Parcelable)location);
+			addPoiIntent.putExtra(AddPOIActivity.KEY_OVERLAY_TYPES, (Serializable)mOverlayManager.getOverlayTypes());
+			mContext.startActivity(addPoiIntent);
+			super.onLongPress(e);
 		}
-
-		public boolean onTouchEvent(MotionEvent event) {
-			switch(event.getActionMasked()) {
-			case MotionEvent.ACTION_DOWN:
-				sX = event.getX();
-				sY = event.getY();
-				pointerID1 = event.getPointerId(0);
-				break;
-			case MotionEvent.ACTION_POINTER_DOWN:
-				fX = event.getX();
-				fY = event.getY();
-				focalX = getMidpoint(fX, sX);
-				focalY = getMidpoint(fY, sY);
-				pivotX = focalX;
-				pivotY = focalY;
-				pointerID2 = event.getPointerId(event.getActionIndex());
-				break;
-			case MotionEvent.ACTION_MOVE:
-				if (pointerID1 == INVALID_POINTER_ID || pointerID2 == INVALID_POINTER_ID) {
-					break;
-				}
-				float nfX, nfY, nsX, nsY;
-				nfX = event.getX(event.findPointerIndex(pointerID1));
-				nfY = event.getY(event.findPointerIndex(pointerID1));
-				nsX = event.getX(event.findPointerIndex(pointerID2));
-				nsY = event.getY(event.findPointerIndex(pointerID2));
-				float angle = angleBetweenLines(fX, fY, nfX, nfY, sX, sY, nsX, nsY);
-				rotation += angle;
-				invalidate();
-				fX = nfX;
-				fY = nfY;
-				sX = nsX;
-				sY = nsY;
-				break;
-			case MotionEvent.ACTION_UP:
-				pointerID1 = INVALID_POINTER_ID;
-				break;
-			case MotionEvent.ACTION_POINTER_UP:
-				pointerID2 = INVALID_POINTER_ID;
-				break;
-			}
-			return true;
+	}
+	
+	public class TransformationData {
+		private float pivotX, pivotY;
+		private float rotationAngle;
+		private float zoom;
+		
+		public TransformationData() {
+			pivotX = 0.0f;
+			pivotY = 0.0f;
+			rotationAngle = 0.0f;
+			zoom = 1.0f;
 		}
 		
-		private float getMidpoint(float a, float b) {
-			return (a+b)/2;
+		public float getRotation() {
+			return rotationAngle;
 		}
 		
-		private float angleBetweenLines(float fx1, float fy1, float fx2, float fy2, float sx1, float sy1, float sx2, float sy2) {
-			float angle1 = (float) Math.atan2(fy1 - fy2, fx1 - fx2);
-			float angle2 = (float) Math.atan2(sy1 - sy2, sx1 - sx2);
-			return findAngleDelta(angle1, angle2);
+		public float getZoom() {
+			return zoom;
 		}
 		
-		private float findAngleDelta(float angle1, float angle2) {
-			float from = angle2 % 360.0f;
-			float to = angle1 % 360.0f;
-			
-			float dist = to - from;
-			
-			if (dist < -180.0f) {
-				dist += 360.0f;
-			} else if (dist > 180.0f) {
-				dist -= 360.0f;
-			}
-			
-			return dist;
+		public void scaleZoom(float scale) {
+			zoom *= scale;
+			if (zoom < 1) zoom = 1;
+			//TODO probably need a maximum too
+		}
+		
+		public void setScale(float scale) {
+			zoom = scale;
+			if (zoom < 1) zoom = 1;
 		}
 	}
 }

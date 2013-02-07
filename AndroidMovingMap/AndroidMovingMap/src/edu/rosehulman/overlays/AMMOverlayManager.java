@@ -1,6 +1,5 @@
 package edu.rosehulman.overlays;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +8,9 @@ import java.util.Map;
 import android.content.Context;
 import android.content.res.Resources;
 import edu.rosehulman.androidmovingmap.R;
+import edu.rosehulman.server.POI;
 
-public class AMMOverlayManager implements Serializable {
+public class AMMOverlayManager implements IOverlayManager {
 
 	// Enumerate Overlay types and their associated data (ie icon)
 	// These should have some better names :P
@@ -57,6 +57,11 @@ public class AMMOverlayManager implements Serializable {
 	
 	public void addCustomOverlay(final String name) {
 		customOverlays.put(name, new AMMItemizedOverlay(this.context.getResources().getDrawable(R.drawable.ic_launcher), name, this.context));
+	}
+
+	public void addOverlay(POI poi) {
+		// TODO Auto-generated method stub
+		overlayTypes.get(poi.getPoiType()).addOverlay(poi);
 	}
 	
 }
