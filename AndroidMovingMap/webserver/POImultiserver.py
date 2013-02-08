@@ -19,6 +19,7 @@ ADDR = (HOST, PORT)
 
 class ServerSocket(threading.Thread):
     def __init__(self, connectionNumber, clientsocket, addr):
+        threading.Thread.__init__(self)
         self.connectionNumber = connectionNumber
         self.clientsocket = clientsocket
         self.addr = addr
@@ -91,7 +92,7 @@ class ServerSocket(threading.Thread):
                 self.clientsocket.sendall(jsonPOI + "\n")
 
                 messageNum += 1
-                time.sleep(6.25 + (random.random() / 4.0))
+                time.sleep(0.50 + (random.random() / 4.0))
         except KeyboardInterrupt:
             print "\tPSS broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
         except Exception as e:
@@ -118,7 +119,7 @@ def main():
             print "\t%s at %s (connection %d)" %(addr, datetime.datetime.now(), connectionNumber)
 
             SS = ServerSocket(connectionNumber, clientsocket, addr)
-            SS.run()
+            SS.start()  #split and run
             ss.append(SS)
 
 

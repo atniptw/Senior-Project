@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -52,10 +53,13 @@ public class MainActivity extends Activity implements OnClickListener,
 	private Button mPOITypeButton;
 
 	private XYTileSource tileSource;
-	private String mapSourcePrefix = "http://137.112.156.177/~king/testMessage/";
+//	private String mapSourcePrefix = "http://king.rose-hulman.edu/~king/testMessage/";
+	private String mapSourcePrefix = "http://queen.wlan.rose-hulman.edu/";
 	private ArrayList<String> mapSourceNames = new ArrayList<String>(Arrays.asList("map2/", "map1/"));
 	private int mapSourceIndex = 0;
 
+	private int UID_to_track = 1;
+	
    	private Handler invalidateDisplay = new Handler() {
 	    @Override
 		public void handleMessage(Message msg) {
@@ -117,12 +121,18 @@ public class MainActivity extends Activity implements OnClickListener,
 			startActivity(intent);
 			return true;
 		} else if (itemId == R.id.menu_cycle_map_type) {
-			mapSourceIndex = (mapSourceIndex + 1) % mapSourceNames.size();
-			tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 4, 256, ".png",
-            		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
-			Log.d("menu cycle", "pathBase: " + tileSource.getTileURLString(new MapTile(0,0,0)));
-			mMapView.setTileSource(tileSource);
-			mMapView.invalidate();
+//			mapSourceIndex = (mapSourceIndex + 1) % mapSourceNames.size();
+//			tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 4, 256, ".png",
+//            		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
+//			Log.d("menu cycle", "pathBase: " + tileSource.getTileURLString(new MapTile(0,0,0)));
+//			mMapView.setTileSource(tileSource);
+//			mMapView.invalidate();
+//			UID_to_track += 1;
+//			if (UID_to_track == Server.getInstance().POIelements.size())
+//			{
+//				UID_to_track = -1;
+//			}
+				
 			return true;
 		} else if (itemId == R.id.menu_start_stop_sync) {
 			if (Server.getInstance().serverRunning())
@@ -239,22 +249,25 @@ public class MainActivity extends Activity implements OnClickListener,
     {
     	for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlayTypes())
     	{
-    		List<POI> clientSide = new ArrayList<POI>();
-    		for (POI testPoint : type.mOverlays)
+    		Iterator<POI> iter = type.mOverlays.iterator();
+    		while (iter.hasNext())
     		{
-    			if (testPoint.getUID() < 0)
+    			POI testPoint = iter.next();
+    			if (testPoint.getUID() > 0)
     			{
-    				clientSide.add(testPoint);
+    				iter.remove();
     			}
     		}
-    		type.mOverlays.clear();
-    		type.mOverlays.addAll(clientSide);
 
         	for (POI point : Server.getInstance().POIelements.values())
         	{
         		if (point.getType().equalsIgnoreCase(type.getName()))
         		{
         			type.addOverlay(point);
+        		}
+        		if (point.getUID() == UID_to_track)
+        		{
+        			mMapView.getController().setCenter(point.getGeoPoint());
         		}
         	}
     	}
