@@ -55,7 +55,8 @@ public class MainActivity extends Activity implements OnClickListener,
 	private XYTileSource tileSource;
 //	private String mapSourcePrefix = "http://king.rose-hulman.edu/~king/testMessage/";
 	private String mapSourcePrefix = "http://queen.wlan.rose-hulman.edu/";
-	private ArrayList<String> mapSourceNames = new ArrayList<String>(Arrays.asList("map2/", "map1/"));
+	private ArrayList<String> mapSourceNames = new ArrayList<String>(Arrays.asList("map1/", "map2/"));
+	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(Arrays.asList(5,4));
 	private int mapSourceIndex = 0;
 
 	private int UID_to_track = 1;
@@ -90,7 +91,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		// Comment back in to use MAPNIK server data
 //		mMapView.setTileSource(TileSourceFactory.MAPNIK);
-        tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 4, 256, ".png",
+        tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 5, 256, ".png",
         		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
         mMapView.setTileSource(tileSource);
 
@@ -121,18 +122,19 @@ public class MainActivity extends Activity implements OnClickListener,
 			startActivity(intent);
 			return true;
 		} else if (itemId == R.id.menu_cycle_map_type) {
-//			mapSourceIndex = (mapSourceIndex + 1) % mapSourceNames.size();
-//			tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 4, 256, ".png",
-//            		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
-//			Log.d("menu cycle", "pathBase: " + tileSource.getTileURLString(new MapTile(0,0,0)));
-//			mMapView.setTileSource(tileSource);
-//			mMapView.invalidate();
-//			UID_to_track += 1;
-//			if (UID_to_track == Server.getInstance().POIelements.size())
-//			{
-//				UID_to_track = -1;
-//			}
-				
+			mapSourceIndex = (mapSourceIndex + 1) % mapSourceNames.size();
+			tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, mapMaxZoom.get(mapSourceIndex), 256, ".png",
+            		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
+			Log.d("menu cycle", "pathBase: " + tileSource.getTileURLString(new MapTile(0,0,0)));
+			mMapView.setTileSource(tileSource);
+			mMapView.invalidate();
+			return true;
+		} else if (itemId == R.id.menu_track_point) {
+			UID_to_track += 1;
+			if (UID_to_track == Server.getInstance().POIelements.size())
+			{
+				UID_to_track = -1;
+			}				
 			return true;
 		} else if (itemId == R.id.menu_start_stop_sync) {
 			if (Server.getInstance().serverRunning())
@@ -147,17 +149,21 @@ public class MainActivity extends Activity implements OnClickListener,
 			Log.d("POI", "attempting to sync onto server");
 			for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlayTypes())
 			{
-				for (POI mapItem : type.mOverlays)
-				{
-					if (mapItem.getUID() < 0)
-					{
-						// TODO seth delete item so when server pushes back we don't keep duplicate
+	    		Iterator<POI> iter = type.mOverlays.iterator();
+	    		while (iter.hasNext())
+	    		{
+	    			POI tempPoint = iter.next();
+	    			if (tempPoint.getUID() < 0)
+	    			{
 						try {
-							Server.getInstance().sendMessage(mapItem.toJSONString() + "\n");
+							Server.getInstance().sendMessage(tempPoint.toJSONString() + "\n");
+							// TODO validate this TODO 
+								// TODO Seth delete item so when server pushes back we don't keep duplicate
+							iter.remove();
 						} catch (IOException e) {
 							Log.d("POI", "failed to send POI");
 						}
-					}
+	    			}
 				}
 			}
 			return true;
@@ -253,7 +259,7 @@ public class MainActivity extends Activity implements OnClickListener,
     		while (iter.hasNext())
     		{
     			POI testPoint = iter.next();
-    			if (testPoint.getUID() > 0)
+    			if (testPoint.getUID() >= 0)
     			{
     				iter.remove();
     			}

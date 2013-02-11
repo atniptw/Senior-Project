@@ -15,8 +15,12 @@
         android:title="@string/menu_push_server"
         android:orderInCategory="103"
         android:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_track_point"
+        android:title="@string/menu_track_point"
+        android:orderInCategory="104"
+        android:showAsAction="ifRoom" />
     <item android:id="@+id/menu_cycle_map_type"
         android:title="@string/menu_cycle_map_type"
-        android:orderInCategory="104"
+        android:orderInCategory="105"
         android:showAsAction="ifRoom" />   
 </menu>

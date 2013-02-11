@@ -52,6 +52,9 @@ class POI:
     def getUID(self):
         return self.attributes["UID"]
 
+    def setUID(self, newUID):
+        self.attributes["UID"] = newUID
+
     def getName(self):
         return self.attributes["name"]
 
