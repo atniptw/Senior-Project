@@ -15,5 +15,9 @@
     <string name="icon_title">Check for icon of fun!</string>
     <string name="icon_summary">Ima be a kitty car</string>
     <string name="select_poi">Select POI</string>
+    <string name="compass">Compass</string>
+    <string name="north_up">North Up</string>
+    <string name="heading_up">Heading Up</string>
+    <string name="choose_poi_to_display">Choose POI to display</string>
 
 </resources>

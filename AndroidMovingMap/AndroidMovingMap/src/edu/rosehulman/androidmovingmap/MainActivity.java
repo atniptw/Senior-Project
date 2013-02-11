@@ -4,18 +4,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.osmdroid.tileprovider.MapTile;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Overlay;
-import org.osmdroid.views.overlay.OverlayItem;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,7 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
@@ -50,7 +42,9 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	private OSMMapView mMapView;
 	private LocationManager locationManager;
-	private Button mPOITypeButton;
+	// private Button mPOITypeButton;
+	private ImageView mCompass;
+	private boolean mNorthUp;
 
 	private XYTileSource tileSource;
 //	private String mapSourcePrefix = "http://king.rose-hulman.edu/~king/testMessage/";
@@ -64,11 +58,10 @@ public class MainActivity extends Activity implements OnClickListener,
    	private Handler invalidateDisplay = new Handler() {
 	    @Override
 		public void handleMessage(Message msg) {
-	    	updatePOIandScreen();
-	    }
+			updatePOIandScreen();
+		}
 	};
 
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -95,8 +88,8 @@ public class MainActivity extends Activity implements OnClickListener,
         		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
         mMapView.setTileSource(tileSource);
 
-		mPOITypeButton = (Button) findViewById(R.id.poi_types);
-		mPOITypeButton.setOnClickListener(this);
+//		mPOITypeButton = (Button) findViewById(R.id.poi_types);
+//		mPOITypeButton.setOnClickListener(this);
 
 		Server.getInstance().updatePOIHandler = invalidateDisplay;
 	}
@@ -166,6 +159,13 @@ public class MainActivity extends Activity implements OnClickListener,
 	    			}
 				}
 			}
+			return true;
+		} else if (itemId == R.id.choose_poi_to_display){
+			Toast.makeText(this, "I can totally choose what's displayed",
+					Toast.LENGTH_SHORT).show();
+//			AddPOITypeDialogFragment.newInstance(
+//					mMapView.getAMMOverlayManager(), this).show(
+//					getFragmentManager(), "lol");
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -240,14 +240,24 @@ public class MainActivity extends Activity implements OnClickListener,
 					+ location.getLongitude();
 			Log.d("AMM", "loc: " + loc);
 			Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
+			
 		}
 	};
 
 	public void onClick(View v) {
-		if (v.getId() == R.id.poi_types) {
-			Toast.makeText(this, "Pretend this is a dialog", Toast.LENGTH_SHORT)
-					.show();
+		// if (v.getId() == R.id.poi_types) {
+		// Toast.makeText(this, "Pretend this is a dialog", Toast.LENGTH_SHORT)
+		// .show();
+		// }
+
+		mNorthUp = !mNorthUp;
+		String s;
+		if (mNorthUp) {
+			s = getString(R.string.north_up);
+		} else {
+			s = getString(R.string.heading_up);
 		}
+		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -280,5 +290,4 @@ public class MainActivity extends Activity implements OnClickListener,
     	
     	this.mMapView.invalidate();
     }
-	
 }
