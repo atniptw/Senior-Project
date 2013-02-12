@@ -8,8 +8,6 @@ class POI:
         #kwargs -- dictionary of named arguments
 
         if len(args) >= 4:
-            print "parsing POI from parameters"
-
             if len(args) >= 6:
                 self.attributes = args[5]
             else:
@@ -17,6 +15,8 @@ class POI:
 
             if len(args) >= 5:
                 self.attributes["POItype"] = args[4]
+            else:
+                self.attributes["POItype"] = "type 0"
 
             self.attributes["UID"] = args[0]
             self.attributes["name"] = args[1]
@@ -24,23 +24,19 @@ class POI:
             self.longitudeF = args[3]
 
         elif len(args) == 1:
-            print "parsed POI from JSONString"
-            print args[0]
-            print
-
             self.attributes = {}
             self.attributes["UID"] = -1
             self.attributes["name"] = "BAD NAME"
-            self.attributes["POItype"] = -1
-            self.latitude = 0
-            self.longitude = 0
+            self.attributes["POItype"] = "type 0"
+            self.attributes["latitude"] = 0
+            self.attributes["longitude"] = 0
 
             for k,v in json.loads(args[0]).items():
-                print "\tk(%s) = %s" %(k,v)
                 self.attributes[k] = v
 
-            self.latitudeF = lambda x : self.latitude
-            self.longitudeF = lambda x : self.longitude
+            # for Demo reasons
+            self.latitudeF = lambda x : self.attributes["latitude"]
+            self.longitudeF = lambda x : self.attributes["longitude"]
         
         else:
             raise Exception("bad init data for poi")
@@ -48,6 +44,7 @@ class POI:
 
     def toDict(self):
         newAttr = self.attributes
+        # for Demo reasons so that POI can move without constant update
         newAttr["latitude"] = self.latitudeF(time.time())
         newAttr["longitude"] = self.longitudeF(time.time())
         return newAttr

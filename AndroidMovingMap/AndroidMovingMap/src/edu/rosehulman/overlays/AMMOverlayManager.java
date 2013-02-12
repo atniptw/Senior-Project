@@ -27,7 +27,9 @@ public class AMMOverlayManager implements IOverlayManager {
 	
 	private void initializeOverlayTypes() {
 		overlayTypes = new HashMap<OverlayTypes, AMMItemizedOverlay>();
+
 		Resources resources = this.context.getResources();
+				
 		overlayTypes.put( OverlayTypes.TYPE_1, 
 						  new AMMItemizedOverlay(resources.getDrawable(R.drawable.overlay_type_1), 
 								  				"Type 1",
@@ -49,7 +51,7 @@ public class AMMOverlayManager implements IOverlayManager {
 		initializeOverlayTypes();
 	}
 	
-	public List<AMMItemizedOverlay> getOverlayTypes() {
+	public List<AMMItemizedOverlay> getOverlays() {
 		List<AMMItemizedOverlay> result = new ArrayList<AMMItemizedOverlay>(overlayTypes.values());
 		result.addAll(customOverlays.values());
 		return result;
@@ -61,7 +63,16 @@ public class AMMOverlayManager implements IOverlayManager {
 
 	public void addOverlay(POI poi) {
 		// TODO Auto-generated method stub
-		overlayTypes.get(poi.getPoiType()).addOverlay(poi);
+		overlayTypes.get(poi.getType()).addOverlay(poi);
+	}
+	
+	public int getNumberOfOverlays() {
+		int result = 0;
+		for (AMMItemizedOverlay overlay : getOverlays()) {
+			result += overlay.size();
+		}
+		
+		return result;
 	}
 	
 }
