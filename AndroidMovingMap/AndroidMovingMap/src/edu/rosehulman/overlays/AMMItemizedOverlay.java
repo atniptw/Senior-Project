@@ -6,6 +6,7 @@ import java.util.List;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
+import org.osmdroid.views.overlay.ItemizedOverlay;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -50,6 +51,10 @@ public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
 	
 	public String getName() {
 		return mName;
+	}
+	
+	public ItemizedOverlay<POI> getHandle() {
+		return mIIO;
 	}
 	
 	public boolean isActive() {

@@ -33,7 +33,7 @@ public class OSMMapView extends MapView {
 		mOverlayManager = new AMMOverlayManager(context);
 		mContext = context;
 		mLongPressListener = new GestureDetector(context, new LongPressGestureListener());
-		getOverlays().addAll(mOverlayManager.getOverlays());
+		getOverlays().addAll(mOverlayManager.getHandles());
 	}
 	
 	public OSMMapView(Context context, AttributeSet attrs) {
@@ -47,7 +47,7 @@ public class OSMMapView extends MapView {
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		getOverlays().addAll(mOverlayManager.getOverlays());
+		getOverlays().addAll(mOverlayManager.getHandles());
 	}
 	
 	@Override

@@ -1,10 +1,12 @@
 package edu.rosehulman.overlays;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.osmdroid.views.overlay.ItemizedOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -55,6 +57,18 @@ public class AMMOverlayManager implements IOverlayManager {
 	public List<AMMItemizedOverlay> getOverlays() {
 		List<AMMItemizedOverlay> result = new ArrayList<AMMItemizedOverlay>(overlayTypes.values());
 		result.addAll(customOverlays.values());
+		
+		return result;
+	}
+	
+	public List<ItemizedOverlay> getHandles() {
+		List<AMMItemizedOverlay> list = getOverlays();
+		List<ItemizedOverlay> result = new ArrayList<ItemizedOverlay>();
+		
+		for (AMMItemizedOverlay overlay : list) {
+			result.add(overlay.getHandle());
+		}
+		
 		return result;
 	}
 	
@@ -69,7 +83,7 @@ public class AMMOverlayManager implements IOverlayManager {
 	
 	public int getNumberOfOverlays() {
 		int result = 0;
-		for (AMMItemizedOverlay overlay : getOverlays()) {
+		for (ItemizedOverlay<OverlayItem> overlay : getHandles()) {
 			result += overlay.size();
 		}
 		
