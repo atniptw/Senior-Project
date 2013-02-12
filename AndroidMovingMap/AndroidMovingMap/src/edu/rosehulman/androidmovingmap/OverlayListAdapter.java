@@ -14,23 +14,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
 import edu.rosehulman.overlays.IOverlayManager;
+import edu.rosehulman.overlays.OverlayIconRegistry;
 
 public class OverlayListAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private List<AMMItemizedOverlay> mOverlays;
+	private List<String> mOverlayNames;
 	
-	public OverlayListAdapter(Context context, IOverlayManager manager) {
+	public OverlayListAdapter(Context context, List<String> overlayNames) {
 		this.mContext = context;
-		this.mOverlays = manager.getOverlayTypes();
+		this.mOverlayNames = overlayNames;
 	}
 	
 	public int getCount() {
-		return mOverlays.size();
+		return mOverlayNames.size();
 	}
 
 	public Object getItem(int i) {
-		return mOverlays.get(i);
+		return mOverlayNames.get(i);
 	}
 
 	public long getItemId(int arg0) {
@@ -40,6 +41,7 @@ public class OverlayListAdapter extends BaseAdapter {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		OverlayTypeView view;
+		OverlayIconRegistry iconRegistry = OverlayIconRegistry.getInstance();
 		
 		if (convertView == null) {
 			view = new OverlayTypeView();
@@ -47,9 +49,10 @@ public class OverlayListAdapter extends BaseAdapter {
 			view = (OverlayTypeView) convertView;
 		}
 		
-		AMMItemizedOverlay overlay = mOverlays.get(position);
-		view.setImage(overlay.getIcon());
-		view.setText(overlay.getName());
+		String name = mOverlayNames.get(position);
+		Drawable icon = iconRegistry.getIcon(name);
+		view.setImage(icon);
+		view.setText(name);
 		return view;
 	}
 	

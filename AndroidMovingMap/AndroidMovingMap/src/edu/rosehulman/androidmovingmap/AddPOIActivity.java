@@ -1,25 +1,22 @@
 package edu.rosehulman.androidmovingmap;
 
-import java.util.List;
+import java.io.Serializable;
 
 import org.osmdroid.util.GeoPoint;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import edu.rosehulman.overlays.AMMItemizedOverlay;
 
-public class AddPOIActivity extends Activity {
+public class AddPOIActivity extends Activity implements Serializable {
 	public static final String KEY_GEOPOINT = "KEY_GEOPOINT";
 	public static final String KEY_OVERLAY_TYPES = "KEY_OVERLAY_TYPES";
 	
 	private GeoPoint mGeoPoint;
-	private List<AMMItemizedOverlay> mOverlayTypes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,13 +29,14 @@ public class AddPOIActivity extends Activity {
         poiTypeButton.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
+				PoiTypeListDialog dialog = PoiTypeListDialog.newInstance(AddPOIActivity.this);
+				dialog.show(getFragmentManager(), "dialog");
 			}
 		});
         
         Button confirmButton = (Button) findViewById(R.id.add_poi_create_btn);
         confirmButton.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
-        		// TODO Auto-generated method stub
         		
         	}
         });

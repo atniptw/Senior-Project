@@ -4,17 +4,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.osmdroid.tileprovider.MapTile;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Overlay;
-import org.osmdroid.views.overlay.OverlayItem;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -40,7 +33,6 @@ import android.widget.Button;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
-import edu.rosehulman.overlays.AddPOITypeDialogFragment;
 import edu.rosehulman.server.POI;
 import edu.rosehulman.server.Server;
 
@@ -135,7 +127,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			return true;
 		} else if (itemId == R.id.menu_push_server) {
 			Log.d("POI", "attempting to sync onto server");
-			for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlayTypes())
+			for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlays())
 			{
 				for (POI mapItem : type.mOverlays)
 				{
@@ -164,10 +156,10 @@ public class MainActivity extends Activity implements OnClickListener,
 		final boolean gpsEnabled = locationManager
 				.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-		if (!gpsEnabled) {
-			new EnableGpsDialogFragment().show(getFragmentManager(),
-					"enableGpsDialog");
-		}
+//		if (!gpsEnabled) {
+//			new EnableGpsDialogFragment().show(getFragmentManager(),
+//					"enableGpsDialog");
+//		}
 	}
 
 	private class EnableGpsDialogFragment extends DialogFragment {
@@ -237,7 +229,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
     private void updatePOIandScreen()
     {
-    	for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlayTypes())
+    	for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlays())
     	{
     		List<POI> clientSide = new ArrayList<POI>();
     		for (POI testPoint : type.mOverlays)
