@@ -6,12 +6,21 @@ import java.util.List;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IMapView;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.MotionEvent;
 import edu.rosehulman.server.POI;
 
 public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
@@ -32,7 +41,7 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		
 		OverlayIconRegistry.getInstance().registerIcon(name, icon);
 	}
-	
+
 	public void addOverlay(POI overlay) {
 		mOverlays.add(overlay);
 		populate();
@@ -60,11 +69,11 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public Drawable getIcon() {
 		return mIcon;
 	}
-	
+
 	public String getName() {
 		return mName;
 	}
-	
+
 	public boolean isActive() {
 		return mActive;
 	}
@@ -73,4 +82,33 @@ public class AMMItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		mActive = active;
 	}
 
+	@Override
+	public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+		// TODO: figure out where POI info is stored... 
+//		DialogFragment poiInfo = new POIinfoDialog(this.getItem(0).mUid, );
+		return super.onTouchEvent(event, mapView);
+	}
+
+	class POIinfoDialog extends DialogFragment {
+		private String mUID;
+		private String mName;
+		private String mLat;
+		private String mLon;
+		
+		public POIinfoDialog(String UID, String name, String lat, String lon) {
+			mUID = UID;
+			mName = name;
+			mLat = lat;
+			mLon = lon;
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			return new AlertDialog.Builder(getActivity())
+					.setTitle("POI: " + mUID)
+					.setMessage(
+							"Name: " + mName + "\nLatitude: " + mLat
+									+ "\nLongitude" + mLon).create();
+		}
+	};
 }

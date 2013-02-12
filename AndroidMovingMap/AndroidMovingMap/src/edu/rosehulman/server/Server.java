@@ -221,7 +221,9 @@ public class Server {
 						in.close();
 					if (out != null)
 						out.close();
-				} catch (IOException e) {}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	};

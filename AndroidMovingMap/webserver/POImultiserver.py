@@ -9,7 +9,7 @@ import random
 
 import json
 import poi
-from POIData import POIelements
+from POIData import POIelements, nextUIDgenerator
 
 BUFFERSIZE = 1024
 
@@ -19,6 +19,7 @@ ADDR = (HOST, PORT)
 
 class ServerSocket(threading.Thread):
     def __init__(self, connectionNumber, clientsocket, addr):
+        threading.Thread.__init__(self)
         self.connectionNumber = connectionNumber
         self.clientsocket = clientsocket
         self.addr = addr
@@ -68,11 +69,16 @@ class ServerSocket(threading.Thread):
                     break
 
                 print "PSL %d received data: \"%s\"" %(self.connectionNumber, data)
-                try:
-                    tempPOI = poi.POI(data)
-                    POIelements[tempPOI.getUID()] = tempPOI
-                except Exception as e:
-                    print "\tPSL failed to parse data: ", e
+                for tempData in data.split("\n"):
+                    if tempData == "":
+                        continue
+                    try:
+                        tempPOI = poi.POI(tempData)
+                        tempPOI.setUID(nextUIDgenerator.next())
+                        POIelements[tempPOI.getUID()] = tempPOI
+                        print "\tparsed to:", tempPOI
+                    except Exception as e:
+                        print "\tPSL failed to parse data: ", e
 
         except KeyboardInterrupt:
             print "\tPSL broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
@@ -91,7 +97,7 @@ class ServerSocket(threading.Thread):
                 self.clientsocket.sendall(jsonPOI + "\n")
 
                 messageNum += 1
-                time.sleep(6.25 + (random.random() / 4.0))
+                time.sleep(0.875 + (random.random() / 4.0))
         except KeyboardInterrupt:
             print "\tPSS broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
         except Exception as e:
@@ -118,7 +124,7 @@ def main():
             print "\t%s at %s (connection %d)" %(addr, datetime.datetime.now(), connectionNumber)
 
             SS = ServerSocket(connectionNumber, clientsocket, addr)
-            SS.run()
+            SS.start()  #split and run
             ss.append(SS)
 
 

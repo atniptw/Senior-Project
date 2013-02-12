@@ -1,5 +1,6 @@
 import math
 import poi
+import itertools
 
 rose = poi.POI(0,
     "Rose",
@@ -30,3 +31,4 @@ POIelements = {rose.getUID():rose,
                 bob.getUID():bob,
                 drogo.getUID():drogo}
 
+nextUIDgenerator = itertools.count(4)
