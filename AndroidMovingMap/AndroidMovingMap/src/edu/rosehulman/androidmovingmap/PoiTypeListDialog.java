@@ -3,16 +3,17 @@ package edu.rosehulman.androidmovingmap;
 import java.io.Serializable;
 import java.util.List;
 
-import edu.rosehulman.overlays.OverlayIconRegistry;
-
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import edu.rosehulman.overlays.OverlayIconRegistry;
 
 public class PoiTypeListDialog extends DialogFragment {
 
@@ -45,6 +46,16 @@ public class PoiTypeListDialog extends DialogFragment {
 		BaseAdapter adapter = new OverlayListAdapter(mContext, mOverlayNames);
 		
 		mOverlayListView.setAdapter(adapter);
+		
+		mOverlayListView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view, int pos,
+					long id) {
+				String name = mOverlayNames.get(pos);
+				((AddPOIActivity)PoiTypeListDialog.this.mContext).setPOIType(name);
+				dismiss();
+			}
+		});
 		
 		return view;
 	}

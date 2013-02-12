@@ -1,5 +1,6 @@
 package edu.rosehulman.server;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,7 +12,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import android.util.Log;
 
-public class POI extends OverlayItem {
+public class POI extends OverlayItem implements Serializable {
     private final int UID;
     private String name;
     private double latitude;
@@ -58,6 +59,12 @@ public class POI extends OverlayItem {
 	public int getUID()
 	{
 		return this.UID;
+	}
+	
+	@Override
+	public String getUid() 
+	{
+		return String.valueOf(getUID());
 	}
 	
 	public String getType()

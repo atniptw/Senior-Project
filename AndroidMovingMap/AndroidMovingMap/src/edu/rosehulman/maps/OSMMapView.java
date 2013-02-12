@@ -5,6 +5,7 @@ import org.metalev.multitouch.controller.MultiTouchController;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -92,7 +93,7 @@ public class OSMMapView extends MapView {
 			GeoPoint location = (GeoPoint)getProjection().fromPixels(e.getX(), e.getY());
 			Intent addPoiIntent = new Intent(mContext, AddPOIActivity.class);
 			addPoiIntent.putExtra(AddPOIActivity.KEY_GEOPOINT, (Parcelable)location);
-			mContext.startActivity(addPoiIntent);
+			((Activity)mContext).startActivityForResult(addPoiIntent, AddPOIActivity.NEW_POI_REQUEST);
 			super.onLongPress(e);
 		}
 	}

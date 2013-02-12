@@ -54,14 +54,23 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/TextView1"
         android:text="Create" />
-
-    <EditText
-        android:id="@+id/editText1"
+
+
+    <TextView
+        android:id="@+id/poi_type_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/poi_type_btn"
         android:layout_below="@+id/poi_type_btn"
+        android:text="Type Name" />
+
+    <EditText
+        android:id="@+id/poi_descr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/poi_type_name"
         android:ems="10"
         android:hint="Description"
         android:inputType="textMultiLine" >

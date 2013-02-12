@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.GeoPoint;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -171,6 +174,28 @@ public class MainActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == AddPOIActivity.NEW_POI_REQUEST) {
+			if (resultCode == RESULT_OK) {
+				GeoPoint geopoint = (GeoPoint)data.getSerializableExtra(AddPOIActivity.KEY_GEOPOINT);
+				String name = data.getStringExtra(AddPOIActivity.KEY_POI_NAME);
+				String type = data.getStringExtra(AddPOIActivity.KEY_POI_TYPE);
+				String descr = data.getStringExtra(AddPOIActivity.KEY_POI_DESCR);
+				
+				double latitude = geopoint.getLatitudeE6() / 1000000.0;
+				double longitude = geopoint.getLongitudeE6() / 1000000.0;
+				
+				Map<String, String> attribs = new HashMap<String, String>();
+				attribs.put("description", descr);
+				
+				POI poi = new POI(-2, name, latitude, longitude, type, attribs);
+				mMapView.getAMMOverlayManager().addOverlay(poi);
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
