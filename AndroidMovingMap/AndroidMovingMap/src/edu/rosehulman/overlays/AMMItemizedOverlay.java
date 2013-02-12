@@ -8,8 +8,14 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
 import edu.rosehulman.server.POI;
 
 public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
@@ -22,6 +28,7 @@ public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
 	private Drawable mIcon;
 	private String mName;
 	private boolean mActive;
+	private Context mContext;
 	
 	public AMMItemizedOverlay(Drawable icon, String name,
 			Context context) {
@@ -29,6 +36,7 @@ public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
 		mIcon = icon;
 		mName = name;
 		mActive = true;
+		mContext = context;
 		
 		OverlayIconRegistry.getInstance().registerIcon(name, icon);
 	}
@@ -65,14 +73,33 @@ public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
 		mActive = active;
 	}
 
-	public boolean onItemLongPress(int arg0, POI arg1) {
+	public boolean onItemLongPress(int arg0, POI item) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean onItemSingleTapUp(int arg0, POI arg1) {
+	public boolean onItemSingleTapUp(int arg0, POI item) {
 		// TODO Auto-generated method stub
-		return false;
+		Log.d("AMM", "I touched something! Wee!");
+		POIinfoDialog mDialog = new POIinfoDialog(item);
+		mDialog.show(((Activity)mContext).getFragmentManager(), "POI info");
+		return true;
+	}
+	
+	private class POIinfoDialog extends DialogFragment {
+
+		private POI mPOI;
+		
+		public POIinfoDialog(POI item) {
+			mPOI = item;
+		}
+		
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			return new AlertDialog.Builder(getActivity())
+					.setMessage(mPOI.toString())
+					.create();
+		}
 	}
 
 }

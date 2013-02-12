@@ -19,6 +19,7 @@
     <string name="compass">Compass</string>
     <string name="north_up">North Up</string>
     <string name="heading_up">Heading Up</string>
+    <string name="find_me">Find Me</string>
     <string name="choose_poi_to_display">Choose POI to display</string>
 
 </resources>

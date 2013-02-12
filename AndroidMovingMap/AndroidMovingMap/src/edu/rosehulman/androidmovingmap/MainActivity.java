@@ -41,21 +41,24 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	private OSMMapView mMapView;
 	private LocationManager locationManager;
-	// private Button mPOITypeButton;
 	private ImageView mCompass;
+	private ImageView mFindMe;
 	private boolean mNorthUp;
 
 	private XYTileSource tileSource;
-//	private String mapSourcePrefix = "http://king.rose-hulman.edu/~king/testMessage/";
+	// private String mapSourcePrefix =
+	// "http://king.rose-hulman.edu/~king/testMessage/";
 	private String mapSourcePrefix = "http://queen.wlan.rose-hulman.edu/";
-	private ArrayList<String> mapSourceNames = new ArrayList<String>(Arrays.asList("map1/", "map2/"));
-	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(Arrays.asList(5,4));
+	private ArrayList<String> mapSourceNames = new ArrayList<String>(
+			Arrays.asList("map1/", "map2/"));
+	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(
+			Arrays.asList(5, 4));
 	private int mapSourceIndex = 0;
 
 	private int UID_to_track = 1;
-	
-   	private Handler invalidateDisplay = new Handler() {
-	    @Override
+
+	private Handler invalidateDisplay = new Handler() {
+		@Override
 		public void handleMessage(Message msg) {
 			updatePOIandScreen();
 		}
@@ -82,13 +85,17 @@ public class MainActivity extends Activity implements OnClickListener,
 		mMapView.setBuiltInZoomControls(true);
 
 		// Comment back in to use MAPNIK server data
-//		mMapView.setTileSource(TileSourceFactory.MAPNIK);
-        tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 5, 256, ".png",
-        		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
-        mMapView.setTileSource(tileSource);
+		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
+		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 5,
+				256, ".png", mapSourcePrefix
+						+ mapSourceNames.get(mapSourceIndex));
+		mMapView.setTileSource(tileSource);
 
-//		mPOITypeButton = (Button) findViewById(R.id.poi_types);
-//		mPOITypeButton.setOnClickListener(this);
+		mCompass = (ImageView) findViewById(R.id.compass);
+		mCompass.setOnClickListener(this);
+
+		mFindMe = (ImageView) findViewById(R.id.find_me);
+		mFindMe.setOnClickListener(this);
 
 		Server.getInstance().updatePOIHandler = invalidateDisplay;
 	}
@@ -115,56 +122,56 @@ public class MainActivity extends Activity implements OnClickListener,
 			return true;
 		} else if (itemId == R.id.menu_cycle_map_type) {
 			mapSourceIndex = (mapSourceIndex + 1) % mapSourceNames.size();
-			tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, mapMaxZoom.get(mapSourceIndex), 256, ".png",
-            		mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
-			Log.d("menu cycle", "pathBase: " + tileSource.getTileURLString(new MapTile(0,0,0)));
+			tileSource = new XYTileSource("local" + mapSourceIndex, null, 0,
+					mapMaxZoom.get(mapSourceIndex), 256, ".png",
+					mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
+			Log.d("menu cycle",
+					"pathBase: "
+							+ tileSource.getTileURLString(new MapTile(0, 0, 0)));
 			mMapView.setTileSource(tileSource);
 			mMapView.invalidate();
 			return true;
 		} else if (itemId == R.id.menu_track_point) {
 			UID_to_track += 1;
-			if (UID_to_track == Server.getInstance().POIelements.size())
-			{
+			if (UID_to_track == Server.getInstance().POIelements.size()) {
 				UID_to_track = -1;
-			}				
+			}
 			return true;
 		} else if (itemId == R.id.menu_start_stop_sync) {
-			if (Server.getInstance().serverRunning())
-        	{
-        		Server.getInstance().stopServer();
-        	} else
-        	{
-        		Server.getInstance().startServer();
-        	}
+			if (Server.getInstance().serverRunning()) {
+				Server.getInstance().stopServer();
+			} else {
+				Server.getInstance().startServer();
+			}
 			return true;
 		} else if (itemId == R.id.menu_push_server) {
 			Log.d("POI", "attempting to sync onto server");
-			for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlays())
-			{
-	    		Iterator<POI> iter = type.mOverlays.iterator();
-	    		while (iter.hasNext())
-	    		{
-	    			POI tempPoint = iter.next();
-	    			if (tempPoint.getUID() < 0)
-	    			{
+			for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager()
+					.getOverlays()) {
+				Iterator<POI> iter = type.mOverlays.iterator();
+				while (iter.hasNext()) {
+					POI tempPoint = iter.next();
+					if (tempPoint.getUID() < 0) {
 						try {
-							Server.getInstance().sendMessage(tempPoint.toJSONString() + "\n");
-							// TODO validate this TODO 
-								// TODO Seth delete item so when server pushes back we don't keep duplicate
+							Server.getInstance().sendMessage(
+									tempPoint.toJSONString() + "\n");
+							// TODO validate this TODO
+							// TODO Seth delete item so when server pushes back
+							// we don't keep duplicate
 							iter.remove();
 						} catch (IOException e) {
 							Log.d("POI", "failed to send POI");
 						}
-	    			}
+					}
 				}
 			}
 			return true;
-		} else if (itemId == R.id.choose_poi_to_display){
+		} else if (itemId == R.id.choose_poi_to_display) {
 			Toast.makeText(this, "I can totally choose what's displayed",
 					Toast.LENGTH_SHORT).show();
-//			AddPOITypeDialogFragment.newInstance(
-//					mMapView.getAMMOverlayManager(), this).show(
-//					getFragmentManager(), "lol");
+			// AddPOITypeDialogFragment.newInstance(
+			// mMapView.getAMMOverlayManager(), this).show(
+			// getFragmentManager(), "lol");
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -179,10 +186,10 @@ public class MainActivity extends Activity implements OnClickListener,
 		final boolean gpsEnabled = locationManager
 				.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-//		if (!gpsEnabled) {
-//			new EnableGpsDialogFragment().show(getFragmentManager(),
-//					"enableGpsDialog");
-//		}
+		// if (!gpsEnabled) {
+		// new EnableGpsDialogFragment().show(getFragmentManager(),
+		// "enableGpsDialog");
+		// }
 	}
 
 	private class EnableGpsDialogFragment extends DialogFragment {
@@ -239,54 +246,47 @@ public class MainActivity extends Activity implements OnClickListener,
 					+ location.getLongitude();
 			Log.d("AMM", "loc: " + loc);
 			Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
-			
+
 		}
 	};
 
 	public void onClick(View v) {
-		// if (v.getId() == R.id.poi_types) {
-		// Toast.makeText(this, "Pretend this is a dialog", Toast.LENGTH_SHORT)
-		// .show();
-		// }
-
-		mNorthUp = !mNorthUp;
-		String s;
-		if (mNorthUp) {
-			s = getString(R.string.north_up);
-		} else {
-			s = getString(R.string.heading_up);
+		if (v.getId() == R.id.compass) {
+			mNorthUp = !mNorthUp;
+			String s;
+			if (mNorthUp) {
+				s = getString(R.string.north_up);
+			} else {
+				s = getString(R.string.heading_up);
+			}
+			Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+		} else if (v.getId() == R.id.find_me){
+			Toast.makeText(this, "centering on device location", Toast.LENGTH_SHORT).show();
 		}
-		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 
 	}
 
-    private void updatePOIandScreen()
-    {
-    	for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlays())
-    	{
-    		Iterator<POI> iter = type.mOverlays.iterator();
-    		while (iter.hasNext())
-    		{
-    			POI testPoint = iter.next();
-    			if (testPoint.getUID() >= 0)
-    			{
-    				iter.remove();
-    			}
-    		}
+	private void updatePOIandScreen() {
+		for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager()
+				.getOverlays()) {
+			Iterator<POI> iter = type.mOverlays.iterator();
+			while (iter.hasNext()) {
+				POI testPoint = iter.next();
+				if (testPoint.getUID() >= 0) {
+					iter.remove();
+				}
+			}
 
-        	for (POI point : Server.getInstance().POIelements.values())
-        	{
-        		if (point.getType().equalsIgnoreCase(type.getName()))
-        		{
-        			type.addOverlay(point);
-        		}
-        		if (point.getUID() == UID_to_track)
-        		{
-        			mMapView.getController().setCenter(point.getGeoPoint());
-        		}
-        	}
-    	}
-    	
-    	this.mMapView.invalidate();
-    }
+			for (POI point : Server.getInstance().POIelements.values()) {
+				if (point.getType().equalsIgnoreCase(type.getName())) {
+					type.addOverlay(point);
+				}
+				if (point.getUID() == UID_to_track) {
+					mMapView.getController().setCenter(point.getGeoPoint());
+				}
+			}
+		}
+
+		this.mMapView.invalidate();
+	}
 }
