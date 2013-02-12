@@ -9,13 +9,14 @@
         android:layout_height="match_parent"
         />
 
-<!--     <Button -->
-<!--         android:id="@+id/poi_types" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_alignParentLeft="true" -->
-<!--         android:layout_alignParentTop="true" -->
-<!--         android:text="Button" /> -->
+	<ImageView
+        android:id="@+id/find_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/find_me"
+        android:src="@drawable/find_me" />
 
     <ImageView
         android:id="@+id/compass"
