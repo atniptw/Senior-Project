@@ -17,6 +17,7 @@ public class AddPOIActivity extends Activity implements Serializable {
 	public static final String KEY_OVERLAY_TYPES = "KEY_OVERLAY_TYPES";
 	
 	private GeoPoint mGeoPoint;
+	private String mPoiTypeName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,6 @@ public class AddPOIActivity extends Activity implements Serializable {
         		
         	}
         });
-        
         
     }
 
