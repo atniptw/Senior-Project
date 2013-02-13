@@ -81,11 +81,13 @@ public class MainActivity extends Activity implements OnClickListener,
 				.getProvider(LocationManager.GPS_PROVIDER);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				refreshGPStime, refreshGPSdistance, listener);
+		
 
 		mMapView = (OSMMapView) findViewById(R.id.map_view);
 		mMapView.setClickable(true);
 		mMapView.setMultiTouchControls(true);
 		mMapView.setBuiltInZoomControls(true);
+		
 
 		// Comment back in to use MAPNIK server data
 		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
@@ -185,24 +187,26 @@ public class MainActivity extends Activity implements OnClickListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == AddPOIActivity.NEW_POI_REQUEST) {
 			if (resultCode == RESULT_OK) {
-				GeoPoint geopoint = (GeoPoint)data.getSerializableExtra(AddPOIActivity.KEY_GEOPOINT);
+				GeoPoint geopoint = (GeoPoint) data
+						.getSerializableExtra(AddPOIActivity.KEY_GEOPOINT);
 				String name = data.getStringExtra(AddPOIActivity.KEY_POI_NAME);
 				String type = data.getStringExtra(AddPOIActivity.KEY_POI_TYPE);
-				String descr = data.getStringExtra(AddPOIActivity.KEY_POI_DESCR);
-				
+				String descr = data
+						.getStringExtra(AddPOIActivity.KEY_POI_DESCR);
+
 				double latitude = geopoint.getLatitudeE6() / 1000000.0;
 				double longitude = geopoint.getLongitudeE6() / 1000000.0;
-				
+
 				Map<String, String> attribs = new HashMap<String, String>();
 				attribs.put("description", descr);
-				
+
 				POI poi = new POI(-2, name, latitude, longitude, type, attribs);
 				mMapView.getAMMOverlayManager().addOverlay(poi);
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -211,10 +215,10 @@ public class MainActivity extends Activity implements OnClickListener,
 		final boolean gpsEnabled = locationManager
 				.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-		// if (!gpsEnabled) {
-		// new EnableGpsDialogFragment().show(getFragmentManager(),
-		// "enableGpsDialog");
-		// }
+		if (!gpsEnabled) {
+			new EnableGpsDialogFragment().show(getFragmentManager(),
+					"enableGpsDialog");
+		}
 	}
 
 	private class EnableGpsDialogFragment extends DialogFragment {
@@ -271,6 +275,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					+ location.getLongitude();
 			Log.d("AMM", "loc: " + loc);
 			Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
+			mMapView.setDeviceLocation(location);
 
 		}
 	};
@@ -285,8 +290,9 @@ public class MainActivity extends Activity implements OnClickListener,
 				s = getString(R.string.heading_up);
 			}
 			Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-		} else if (v.getId() == R.id.find_me){
-			Toast.makeText(this, "centering on device location", Toast.LENGTH_SHORT).show();
+		} else if (v.getId() == R.id.find_me) {
+			Toast.makeText(this, "centering on device location",
+					Toast.LENGTH_SHORT).show();
 		}
 
 	}

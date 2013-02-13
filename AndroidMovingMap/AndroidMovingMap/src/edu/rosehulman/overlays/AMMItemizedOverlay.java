@@ -13,6 +13,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,6 +45,10 @@ public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
 	
 	public void addOverlay(POI poi) {
 		mIIO.addItem(poi);
+	}
+	
+	public void deleteOverlay(POI poi) {
+		mIIO.removeItem(poi);
 	}
 	
 	public int size() {
@@ -97,7 +103,12 @@ public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			return new AlertDialog.Builder(getActivity())
-					.setMessage(mPOI.toString())
+					.setMessage(mPOI.toString()).setNegativeButton("Delete", new OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							deleteOverlay(mPOI);
+						}
+					})
 					.create();
 		}
 	}
