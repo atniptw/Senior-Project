@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/TextView1"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -16,7 +16,7 @@
 
     <EditText
         android:id="@+id/poi_name"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/TextView1"
@@ -24,58 +24,45 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/poi_name"
         android:text="Type"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <ImageButton
-        android:id="@+id/poi_type_btn"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/poi_type_spinner"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView2"
-        android:src="@drawable/pusheen_car" />
+        android:prompt="@string/poi_spinner_prompt" />
+
+    <EditText
+        android:id="@+id/poi_descr"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/poi_type_spinner"
+        android:ems="10"
+        android:hint="Description"
+        android:inputType="textMultiLine" />
 
     <Button
         android:id="@+id/add_poi_cancel_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/poi_descr"
         android:text="Cancel" />
 
     <Button
         android:id="@+id/add_poi_create_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/TextView1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/poi_descr"
         android:text="Create" />
-
-
-    <TextView
-        android:id="@+id/poi_type_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/poi_type_btn"
-        android:layout_below="@+id/poi_type_btn"
-        android:text="Type Name" />
-
-    <EditText
-        android:id="@+id/poi_descr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/poi_type_name"
-        android:ems="10"
-        android:hint="Description"
-        android:inputType="textMultiLine" >
-
-        <requestFocus />
-    </EditText>
 
 </RelativeLayout>

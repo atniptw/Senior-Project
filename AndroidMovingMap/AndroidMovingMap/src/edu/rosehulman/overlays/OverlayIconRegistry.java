@@ -52,6 +52,10 @@ public class OverlayIconRegistry {
 		return new ArrayList<String>(mIconMap.keySet());
 	}
 	
+	public Map<String, Drawable> getIconMap(){
+		return mIconMap;
+	}
+	
 	public class NoAssociatedIconException extends RuntimeException {
 
 		public NoAssociatedIconException(String string) {
