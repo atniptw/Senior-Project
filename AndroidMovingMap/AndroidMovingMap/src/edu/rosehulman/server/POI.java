@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import android.location.Location;
 import android.util.Log;
 
 public class POI extends OverlayItem implements Serializable {
@@ -75,6 +76,11 @@ public class POI extends OverlayItem implements Serializable {
 	public GeoPoint getGeoPoint()
 	{
 		return new GeoPoint(this.latitude, this.longitude);
+	}
+	
+	public void setLocation(Location loc){
+		this.latitude = loc.getLatitude();
+		this.longitude = loc.getLongitude();
 	}
 	
 	public String toJSONString()
