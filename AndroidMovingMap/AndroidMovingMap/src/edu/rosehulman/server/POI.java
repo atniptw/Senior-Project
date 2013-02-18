@@ -129,14 +129,14 @@ public class POI extends OverlayItem implements Serializable {
     public String toString()
     {
     	String data = "POI:\n";
-    	data += "\tname: " + this.name + "\n";
+    	data += "\tName: " + this.name + "\n";
     	data += "\tUID: " + this.UID + "\n";
-    	data += "\tlatitude: " + this.latitude + "\n";
-    	data += "\tlongitude: " + this.longitude + "\n";
-    	data += "\ttype: " + this.POItype + "\n";
+    	data += "\tLatitude: " + this.latitude + "\n";
+    	data += "\tLongitude: " + this.longitude + "\n";
+    	data += "\tType: " + this.POItype + "\n";
     	for (String key : attributes.keySet())
     	{
-    		data += "\tattributes(" + key + "): " + attributes.get(key) + "\n";
+    		data += "\tAttributes(" + key + "): " + attributes.get(key) + "\n";
     	}
     	return data;
     }

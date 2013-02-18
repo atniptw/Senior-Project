@@ -19,6 +19,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -81,13 +82,17 @@ public class MainActivity extends Activity implements OnClickListener,
 				.getProvider(LocationManager.GPS_PROVIDER);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				refreshGPStime, refreshGPSdistance, listener);
+//		Location initDeviceLocation = new Location(provider.getName());
+//		initDeviceLocation.setLongitude(0);
+//		initDeviceLocation.setLatitude(0);
+//		listener.onLocationChanged(initDeviceLocation);
 		
 
 		mMapView = (OSMMapView) findViewById(R.id.map_view);
 		mMapView.setClickable(true);
 		mMapView.setMultiTouchControls(true);
 		mMapView.setBuiltInZoomControls(true);
-		
+//		mMapView.setDeviceLocation(location);
 
 		// Comment back in to use MAPNIK server data
 		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
@@ -325,5 +330,16 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		
 		this.mMapView.invalidate();
+	}
+	
+	public void setUIDtoTrack(int UID){
+		UID_to_track = UID;
+		Log.d("AMM", "tracking UID: " + UID_to_track);
+	}
+	
+	@Override
+	public SharedPreferences getSharedPreferences(String name, int mode) {
+		// TODO Auto-generated method stub
+		return super.getSharedPreferences(name, mode);
 	}
 }

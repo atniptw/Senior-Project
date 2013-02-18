@@ -73,6 +73,15 @@ public class OSMMapView extends MapView {
 	public void invalidate() {
 		super.invalidate();
 		getOverlays().addAll(mOverlayManager.getHandles());
+		
+//		device = new POI(0, "Device", deviceLocation.getLatitude(),
+//				deviceLocation.getLongitude(), "Type_Device",
+//				new HashMap<String, String>());
+//		deviceOverlay = new AMMItemizedOverlay(getResources().getDrawable(
+//				R.drawable.pusheen_car), "Device", mContext);
+//		deviceOverlay.addOverlay(device);
+//		
+//		getOverlays().add(deviceOverlay.getHandle());
 	}
 
 	@Override
