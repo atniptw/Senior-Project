@@ -8,6 +8,7 @@ import org.metalev.multitouch.controller.MultiTouchController;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedOverlay;
+import org.osmdroid.views.overlay.MyLocationOverlay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,9 +31,7 @@ public class OSMMapView extends MapView {
 	private Context mContext;
 	private AMMOverlayManager mOverlayManager;
 
-	private Location deviceLocation;
-	private POI device;
-	private AMMItemizedOverlay deviceOverlay;
+	private MyLocationOverlay deviceOverlay;
 
 	AMMGestureListener mGestureListener = new AMMGestureListener(this);
 	GestureDetector mLongPressListener;
@@ -44,20 +43,16 @@ public class OSMMapView extends MapView {
 		super(context, tileSizePixels);
 		setWillNotDraw(false);
 		mOverlayManager = new AMMOverlayManager(context);
-		// mOverlayManager.addOverlay(new POI(0, "Device", latitude, longitude,
-		// POItype, attributes));
 		mContext = context;
 		mLongPressListener = new GestureDetector(context,
 				new LongPressGestureListener());
 		getOverlays().addAll(mOverlayManager.getHandles());
-
-		device = new POI(0, "Device", deviceLocation.getLatitude(),
-				deviceLocation.getLongitude(), "Type_Device",
-				new HashMap<String, String>());
-		deviceOverlay = new AMMItemizedOverlay(getResources().getDrawable(
-				R.drawable.pusheen_car), "Device", mContext);
-		deviceOverlay.addOverlay(device);
-		getOverlays().add(deviceOverlay.getHandle());
+		
+		
+		deviceOverlay = new MyLocationOverlay(mContext, this);
+		deviceOverlay.enableFollowLocation();
+		deviceOverlay.enableMyLocation();
+		getOverlays().add(deviceOverlay);
 	}
 
 	public OSMMapView(Context context, AttributeSet attrs) {
@@ -67,21 +62,18 @@ public class OSMMapView extends MapView {
 		mContext = context;
 		mLongPressListener = new GestureDetector(context,
 				new LongPressGestureListener());
+		
+		deviceOverlay = new MyLocationOverlay(mContext, this);
+		deviceOverlay.enableFollowLocation();
+		deviceOverlay.enableMyLocation();
+		getOverlays().add(deviceOverlay);
 	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
 		getOverlays().addAll(mOverlayManager.getHandles());
-		
-//		device = new POI(0, "Device", deviceLocation.getLatitude(),
-//				deviceLocation.getLongitude(), "Type_Device",
-//				new HashMap<String, String>());
-//		deviceOverlay = new AMMItemizedOverlay(getResources().getDrawable(
-//				R.drawable.pusheen_car), "Device", mContext);
-//		deviceOverlay.addOverlay(device);
-//		
-//		getOverlays().add(deviceOverlay.getHandle());
+
 	}
 
 	@Override
@@ -120,10 +112,6 @@ public class OSMMapView extends MapView {
 
 	public AMMOverlayManager getAMMOverlayManager() {
 		return mOverlayManager;
-	}
-
-	public void setDeviceLocation(Location location) {
-		deviceLocation = location;
 	}
 
 	private class LongPressGestureListener extends

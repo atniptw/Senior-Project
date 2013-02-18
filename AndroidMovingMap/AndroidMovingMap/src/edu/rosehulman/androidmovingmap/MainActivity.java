@@ -11,6 +11,7 @@ import java.util.Map;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.MyLocationOverlay;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,6 +46,9 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	private OSMMapView mMapView;
 	private LocationManager locationManager;
+	LocationProvider provider;
+	private MyLocationOverlay deviceOverlay;
+	
 	private ImageView mCompass;
 	private ImageView mFindMe;
 	private boolean mNorthUp;
@@ -78,22 +82,21 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
-		LocationProvider provider = locationManager
+		provider = locationManager
 				.getProvider(LocationManager.GPS_PROVIDER);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				refreshGPStime, refreshGPSdistance, listener);
-//		Location initDeviceLocation = new Location(provider.getName());
-//		initDeviceLocation.setLongitude(0);
-//		initDeviceLocation.setLatitude(0);
-//		listener.onLocationChanged(initDeviceLocation);
-		
+				refreshGPStime, refreshGPSdistance, listener);		
 
 		mMapView = (OSMMapView) findViewById(R.id.map_view);
 		mMapView.setClickable(true);
 		mMapView.setMultiTouchControls(true);
 		mMapView.setBuiltInZoomControls(true);
-//		mMapView.setDeviceLocation(location);
 
+		deviceOverlay = new MyLocationOverlay(this, mMapView);
+		deviceOverlay.enableFollowLocation();
+		deviceOverlay.enableMyLocation();
+		
+		
 		// Comment back in to use MAPNIK server data
 		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
 		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
@@ -283,8 +286,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			CharSequence loc = "Lat: " + location.getLatitude() + "\n Lon: "
 					+ location.getLongitude();
 			Log.d("AMM", "loc: " + loc);
-			Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
-			mMapView.setDeviceLocation(location);
+//			Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
 
 		}
 	};
@@ -300,8 +302,9 @@ public class MainActivity extends Activity implements OnClickListener,
 			}
 			Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 		} else if (v.getId() == R.id.find_me) {
-			Toast.makeText(this, "centering on device location",
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "centering on device location",
+//					Toast.LENGTH_SHORT).show();
+			mMapView.getController().setCenter(deviceOverlay.getMyLocation());
 		}
 
 	}
@@ -335,6 +338,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	public void setUIDtoTrack(int UID){
 		UID_to_track = UID;
 		Log.d("AMM", "tracking UID: " + UID_to_track);
+	}
+	
+	public LocationProvider getLocationProvider(){
+		return provider;
 	}
 	
 	@Override
