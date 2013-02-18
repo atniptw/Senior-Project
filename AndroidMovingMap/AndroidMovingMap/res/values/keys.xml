@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="key_icon">KEY_ICON</string>
+    <string name="key_server">KEY_SERVER</string>
+    <string name="key_auto_sync">KEY_AUTO_SYNC</string>
 </resources>

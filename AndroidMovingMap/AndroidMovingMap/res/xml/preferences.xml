@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory >
+
+    <PreferenceCategory>
+        <EditTextPreference
+            android:key="@string/key_server"
+            android:title="Server Connection" />
+
         <CheckBoxPreference
-            android:key="@string/key_icon"
-            android:summary="@string/icon_summary"
-            android:title="@string/icon_title" />
-    </PreferenceCategory>    
+            android:key="@string/key_auto_sync"
+            android:summary="Device will automatically sync with server if checked"
+            android:title="Sync Automatically With Server" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
