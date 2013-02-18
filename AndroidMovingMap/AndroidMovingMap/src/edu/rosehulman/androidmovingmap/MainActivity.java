@@ -49,16 +49,16 @@ public class MainActivity extends Activity implements OnClickListener,
 	private boolean mNorthUp;
 
 	private XYTileSource tileSource;
-	// private String mapSourcePrefix =
-	// "http://king.rose-hulman.edu/~king/testMessage/";
+	// private String mapSourcePrefix = "http://king.rose-hulman.edu/~king/testMessage/";
 	private String mapSourcePrefix = "http://queen.wlan.rose-hulman.edu/";
+	//private String mapSourcePrefix = "http://10.0.0.13/";
 	private ArrayList<String> mapSourceNames = new ArrayList<String>(
 			Arrays.asList("map1/", "map2/"));
 	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(
 			Arrays.asList(5, 4));
 	private int mapSourceIndex = 0;
 
-	private int UID_to_track = 1;
+	private int UID_to_track = -1;
 
 	private Handler invalidateDisplay = new Handler() {
 		@Override
@@ -89,11 +89,14 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		// Comment back in to use MAPNIK server data
 		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
-		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 5,
+		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
+				mapMaxZoom.get(mapSourceIndex),
 				256, ".png", mapSourcePrefix
 						+ mapSourceNames.get(mapSourceIndex));
 		mMapView.setTileSource(tileSource);
 
+		mMapView.getController().setZoom(3);
+		
 		mCompass = (ImageView) findViewById(R.id.compass);
 		mCompass.setOnClickListener(this);
 
@@ -141,10 +144,11 @@ public class MainActivity extends Activity implements OnClickListener,
 			}
 			return true;
 		} else if (itemId == R.id.menu_start_stop_sync) {
-			if (Server.getInstance().serverRunning()) {
+			Log.d("sync", "status: " + Server.getInstance().startedPOISync());
+			if (Server.getInstance().startedPOISync()) {
 				Server.getInstance().stopServer();
 			} else {
-				Server.getInstance().startServer();
+				Server.getInstance().startPOISync();
 			}
 			return true;
 		} else if (itemId == R.id.menu_push_server) {
@@ -311,7 +315,9 @@ public class MainActivity extends Activity implements OnClickListener,
 				}
 			}
 		}
+		Log.d("status", "over");
 
+		
 		this.mMapView.invalidate();
 	}
 }

@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
@@ -43,12 +44,13 @@ public class Server {
 	private static Server instance = null;
 	
 	private final static String connect_to = "queen.wlan.rose-hulman.edu";
+//	private final static String connect_to = "10.0.0.13";
 	private final static int connect_port = 5047;
 
-	public Map<Integer,POI> POIelements = new HashMap<Integer,POI>();
+	public Map<Integer,POI> POIelements;
   	public static Handler updatePOIHandler;
 
-	private Server() { ; }
+	private Server() { POIelements = new HashMap<Integer,POI>(); }
 
 	public static Server getInstance()
 	{
@@ -62,6 +64,11 @@ public class Server {
 	public boolean updatePOIFromString(String data)
 	{
 		try {
+			// TODO currently all POI are synced on every data transfer so clear the map of all POI each time
+			// TODO this helps with the ghost POI problem where points remaining after closing and reopening app
+			
+			this.POIelements.clear();
+			
 			JSONObject text = new JSONObject(data);
 			JSONObject POIelements = text.getJSONObject("POI");
 	
@@ -106,6 +113,11 @@ public class Server {
   	{
 	  	if (ListenPOISocket.instance != null)
 		{
+	  		try {
+				this.sendMessage("stopPOI");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	  		ListenPOISocket.instance.stopThread = true;
 	  		ListenPOISocket.instance = null;
 		}
@@ -116,9 +128,24 @@ public class Server {
   		ListenPOISocket.getInstance();
   	}
 
+  	public void startPOISync()
+  	{
+  		try {
+			ListenPOISocket.getInstance().pullFrom = true;
+			this.sendMessage("sendPOI");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+  	}
+  	
   	public boolean serverRunning()
   	{
   		return ListenPOISocket.instance != null;
+  	}
+  	
+  	public boolean startedPOISync()
+  	{
+  		return (ListenPOISocket.getInstance().pullFrom == true);
   	}
   	
   	protected static class ListenPOISocket extends Thread {
@@ -165,7 +192,7 @@ public class Server {
 	  	public void run() {
 	  		try{
 	  			//open a socket connecting us to the server
-	  			Log.d("POI", "Opening Socket");	  			
+	  			Log.d("POI", "Opening Socket");	
 	  			socket = new Socket(connect_to, connect_port);
 	  			Log.d("POI", "Socket Connected!");
 
@@ -185,8 +212,13 @@ public class Server {
 					Log.d("POI", "socket server replied ackHello");
 				}
 		  		this.acked = true;
-				
-				while ( !this.stopThread )
+
+		  		while ( this.pullFrom == false && this.stopThread == false )
+		  		{
+		  			Thread.sleep(50);
+		  		}
+		  		
+				while ( this.stopThread == false )
 				{
 					Thread.sleep(50);
 
@@ -203,6 +235,12 @@ public class Server {
 						Log.d("POI", "socket dispatching updateDisplay handler");
 						Server.updatePOIHandler.sendMessage(Server.updatePOIHandler.obtainMessage());
 					}
+
+					// TODO Seth or Sam do this in a different way
+					// this is to attempt to flush data we don't have time to parse because it arrives to quickly
+					byte dst[] = new byte[10000];
+					in.read(dst);
+					
 				};
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
