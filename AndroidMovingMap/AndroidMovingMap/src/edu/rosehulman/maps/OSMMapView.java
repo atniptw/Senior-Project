@@ -1,13 +1,9 @@
 package edu.rosehulman.maps;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.metalev.multitouch.controller.MultiTouchController;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedOverlay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,10 +12,10 @@ import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import edu.rosehulman.androidmovingmap.AddPOIActivity;
-import edu.rosehulman.androidmovingmap.MainActivity;
 import edu.rosehulman.androidmovingmap.R;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
 import edu.rosehulman.overlays.AMMOverlayManager;
@@ -34,7 +30,6 @@ public class OSMMapView extends MapView {
 	private POI device;
 	private AMMItemizedOverlay deviceOverlay;
 
-	AMMGestureListener mGestureListener = new AMMGestureListener(this);
 	GestureDetector mLongPressListener;
 
 	int centerX, centerY;
@@ -91,22 +86,16 @@ public class OSMMapView extends MapView {
 		this.setMeasuredDimension(parentWidth, parentHeight);
 	};
 
-	private MultiTouchController<Object> multiTouchController = new MultiTouchController<Object>(
-			mGestureListener);
-
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+
+		Log.d("touch", "in onTouch " + event.getPointerCount());
+		if (super.onTouchEvent(event)) {
+		}
 		if (mLongPressListener.onTouchEvent(event)) {
 			return true;
 		}
-		if (multiTouchController.onTouchEvent(event)) {
-			invalidate();
-			return true;
-		}
-		if (super.onTouchEvent(event)) {
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	public AMMOverlayManager getAMMOverlayManager() {
@@ -121,6 +110,7 @@ public class OSMMapView extends MapView {
 			GestureDetector.SimpleOnGestureListener {
 		@Override
 		public void onLongPress(MotionEvent e) {
+			Log.d("touch", "in listener " + e.getPointerCount());
 			GeoPoint location = (GeoPoint) getProjection().fromPixels(e.getX(),
 					e.getY());
 			Intent addPoiIntent = new Intent(mContext, AddPOIActivity.class);

@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
 import edu.rosehulman.overlays.AMMItemizedOverlay;
+import edu.rosehulman.overlays.IItemizedOverlay;
 import edu.rosehulman.server.POI;
 import edu.rosehulman.server.Server;
 
@@ -151,9 +152,9 @@ public class MainActivity extends Activity implements OnClickListener,
 			return true;
 		} else if (itemId == R.id.menu_push_server) {
 			Log.d("POI", "attempting to sync onto server");
-			for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager()
+			for (IItemizedOverlay type : mMapView.getAMMOverlayManager()
 					.getOverlays()) {
-				Iterator<POI> iter = type.mOverlays.iterator();
+				Iterator<POI> iter = type.getOverlays().iterator();
 				while (iter.hasNext()) {
 					POI tempPoint = iter.next();
 					if (tempPoint.getUID() < 0) {
@@ -298,9 +299,9 @@ public class MainActivity extends Activity implements OnClickListener,
 	}
 
 	private void updatePOIandScreen() {
-		for (AMMItemizedOverlay type : mMapView.getAMMOverlayManager()
+		for (IItemizedOverlay type : mMapView.getAMMOverlayManager()
 				.getOverlays()) {
-			Iterator<POI> iter = type.mOverlays.iterator();
+			Iterator<POI> iter = type.getOverlays().iterator();
 			while (iter.hasNext()) {
 				POI testPoint = iter.next();
 				if (testPoint.getUID() >= 0) {

@@ -15,11 +15,12 @@ import edu.rosehulman.server.POI;
 
 public class AMMOverlayManager implements IOverlayManager {
 
-	private Map<String, AMMItemizedOverlay> overlays; 
+	private Map<String, IItemizedOverlay> overlays; 
+	private OwnshipOverlay ownshipOverlays;
 	private Context context;
 	
 	private void initializeOverlayTypes() {
-		overlays = new HashMap<String, AMMItemizedOverlay>();
+		overlays = new HashMap<String, IItemizedOverlay>();
 
 		Resources resources = this.context.getResources();
 				
@@ -42,17 +43,17 @@ public class AMMOverlayManager implements IOverlayManager {
 		initializeOverlayTypes();
 	}
 	
-	public List<AMMItemizedOverlay> getOverlays() {
-		List<AMMItemizedOverlay> result = new ArrayList<AMMItemizedOverlay>(overlays.values());
+	public List<IItemizedOverlay> getOverlays() {
+		List<IItemizedOverlay> result = new ArrayList<IItemizedOverlay>(overlays.values());
 		
 		return result;
 	}
 	
 	public List<ItemizedOverlay> getHandles() {
-		List<AMMItemizedOverlay> list = getOverlays();
+		List<IItemizedOverlay> list = getOverlays();
 		List<ItemizedOverlay> result = new ArrayList<ItemizedOverlay>();
 		
-		for (AMMItemizedOverlay overlay : list) {
+		for (IItemizedOverlay overlay : list) {
 			result.add(overlay.getHandle());
 		}
 		

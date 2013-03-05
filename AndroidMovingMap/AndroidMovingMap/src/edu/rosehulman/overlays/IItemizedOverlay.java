@@ -1,14 +1,14 @@
 package edu.rosehulman.overlays;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.osmdroid.views.overlay.ItemizedOverlay;
 
 import edu.rosehulman.server.POI;
 
-public interface IOverlayManager extends Serializable {
+public interface IItemizedOverlay {
+	public String getName();
+	public List<POI> getOverlays();
+	public ItemizedOverlay<POI> getHandle();
 	public void addOverlay(POI poi);
-	public List<IItemizedOverlay> getOverlays();
-	public List<ItemizedOverlay> getHandles();
 }
