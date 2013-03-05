@@ -23,7 +23,8 @@ class ServerSocket(threading.Thread):
         self.connectionNumber = connectionNumber
         self.clientsocket = clientsocket
         self.addr = addr
-
+        self.sendingData = False
+        self.close = False
 
     def run(self):
         dataBlock = 1
@@ -44,11 +45,12 @@ class ServerSocket(threading.Thread):
             t1 = threading.Thread(target = self.POISocketListener)
             t1.start()
 
+
             t2 = threading.Thread(target = self.POISocketSender)
             t2.start()
 
             t1.join()
-            t2.join()
+            t2.join(0.1)    # After listen thread has died kill send thread after 0.1 seconds
 
             print "\tSS DEBUG(%d): threads joined time to close" %(self.connectionNumber)
 
@@ -72,6 +74,17 @@ class ServerSocket(threading.Thread):
                 for tempData in data.split("\n"):
                     if tempData == "":
                         continue
+
+                    if tempData == "sendPOI":
+                        self.sendingData = True
+                        continue
+
+                    if tempData == "stopPOI":
+                        self.close = True
+                        self.sendingData = False
+                        print "\tPSL exiting from stopPOI (%d)" %(self.connectionNumber)
+                        return
+
                     try:
                         tempPOI = poi.POI(tempData)
                         tempPOI.setUID(nextUIDgenerator.next())
@@ -85,19 +98,24 @@ class ServerSocket(threading.Thread):
         except Exception as e:
             print "\tPSL broke by some random exception or interrupt (%d)" %(self.connectionNumber)
             print e
+
         
     def POISocketSender(self):
         try:
             print "\tin POISocketSender"
             messageNum = 1
-            while True:
+
+            while self.sendingData != True and self.close == False:
+                time.sleep(.1)
+
+            while self.sendingData == True:
                 jsonPOI = json.dumps({"POI":dict([(uid,value.toDict()) for uid,value in POIelements.items()])})
 
-                print "\tSS sending ({0}): {1} for connection {2}".format(messageNum, "ommitted", self.connectionNumber)
+                print "\tSS sending ({0}): {1} ({2} points) for connection {3} ".format(messageNum, "omitted", len(POIelements), self.connectionNumber)
                 self.clientsocket.sendall(jsonPOI + "\n")
 
                 messageNum += 1
-                time.sleep(0.875 + (random.random() / 4.0))
+                time.sleep(1.375 + (random.random() / 4.0))
         except KeyboardInterrupt:
             print "\tPSS broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
         except Exception as e:

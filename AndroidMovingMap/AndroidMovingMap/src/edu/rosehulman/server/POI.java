@@ -27,7 +27,7 @@ public class POI extends OverlayItem implements Serializable {
 
     	this.UID = data.getInt("UID"); data.remove("UID");
     	this.name = data.getString("name"); data.remove("name");
-    	this.latitude = data.getDouble("latitude"); data.remove("name");
+    	this.latitude = data.getDouble("latitude"); data.remove("latitude");
     	this.longitude = data.getDouble("longitude"); data.remove("longitude");
     	this.POItype = data.getString("POItype"); data.remove("POItype");
     	this.attributes = new HashMap<String,String>();
@@ -91,7 +91,6 @@ public class POI extends OverlayItem implements Serializable {
 	    private double longitude;
 	    private int POItype;
 	    private Map<String,String> attributes;
-
 */
 		JSONObject data = new JSONObject();
 		try {
@@ -100,6 +99,11 @@ public class POI extends OverlayItem implements Serializable {
 			data.put("latitude", this.latitude);
 			data.put("longitude", this.longitude);
 			data.put("POItype", this.POItype);
+
+			for (String key : this.attributes.keySet())
+			{
+				data.put(key, this.attributes.get(key));
+			}
 		} catch (JSONException e) {
 			Log.d("POI", "toJSONString error");
 			e.printStackTrace();
@@ -125,14 +129,14 @@ public class POI extends OverlayItem implements Serializable {
     public String toString()
     {
     	String data = "POI:\n";
-    	data += "\tname: " + this.name + "\n";
+    	data += "\tName: " + this.name + "\n";
     	data += "\tUID: " + this.UID + "\n";
-    	data += "\tlatitude: " + this.latitude + "\n";
-    	data += "\tlongitude: " + this.longitude + "\n";
-    	data += "\ttype: " + this.POItype + "\n";
+    	data += "\tLatitude: " + this.latitude + "\n";
+    	data += "\tLongitude: " + this.longitude + "\n";
+    	data += "\tType: " + this.POItype + "\n";
     	for (String key : attributes.keySet())
     	{
-    		data += "\tattributes(" + key + "): " + attributes.get(key) + "\n";
+    		data += "\tAttributes(" + key + "): " + attributes.get(key) + "\n";
     	}
     	return data;
     }

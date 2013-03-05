@@ -18,6 +18,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import edu.rosehulman.androidmovingmap.MainActivity;
 import edu.rosehulman.server.POI;
 
 public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListener<POI>{
@@ -110,6 +111,18 @@ public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListen
 						
 						public void onClick(DialogInterface dialog, int which) {
 							deleteOverlay(mPOI);
+						}
+					}).setNeutralButton("Track", new OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							((MainActivity)mContext).setUIDtoTrack(mPOI.getUID());
+							
+						}
+					}).setPositiveButton("Untrack", new OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							((MainActivity)mContext).setUIDtoTrack(-1);
+							
 						}
 					})
 					.create();

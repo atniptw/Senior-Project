@@ -18,7 +18,8 @@
     <item
         android:id="@+id/menu_push_server"
         android:orderInCategory="103"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_push_server"/>
     <item android:id="@+id/menu_track_point"
         android:title="@string/menu_track_point"
         android:orderInCategory="104"
@@ -30,7 +31,5 @@
     <item
         android:id="@+id/choose_poi_to_display"
         android:showAsAction="ifRoom"
-        android:title="@string/choose_poi_to_display">
-    </item>
-
+        android:title="@string/choose_poi_to_display" />
 </menu>
