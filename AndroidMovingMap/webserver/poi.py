@@ -7,6 +7,8 @@ class POI:
         #args -- tuple of unnamed arguments
         #kwargs -- dictionary of named arguments
 
+        self.timestamp = time.time()
+
         if len(args) >= 4:
             if len(args) >= 6:
                 self.attributes = args[5]
@@ -57,6 +59,9 @@ class POI:
 
     def getName(self):
         return self.attributes["name"]
+
+    def getTimestamp(self):
+        return self.timestamp
 
     def __eq__(self, other):
         if type(other) is type(self):

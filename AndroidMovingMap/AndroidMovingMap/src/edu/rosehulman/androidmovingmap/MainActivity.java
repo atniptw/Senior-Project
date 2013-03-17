@@ -55,12 +55,12 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	private XYTileSource tileSource;
 	// private String mapSourcePrefix = "http://king.rose-hulman.edu/~king/testMessage/";
-	private String mapSourcePrefix = "http://queen.wlan.rose-hulman.edu/";
-	//private String mapSourcePrefix = "http://10.0.0.13/";
+	 private String mapSourcePrefix = "http://queen.wlan.rose-hulman.edu/";
+	// private String mapSourcePrefix = "http://10.0.0.13/";
 	private ArrayList<String> mapSourceNames = new ArrayList<String>(
 			Arrays.asList("map1/", "map2/"));
 	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(
-			Arrays.asList(5, 4));
+			Arrays.asList(16, 4));
 	private int mapSourceIndex = 0;
 
 	private int UID_to_track = -1;
@@ -77,8 +77,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		int refreshGPStime = 100;
-		int refreshGPSdistance = 10;
+		int refreshGPStime = 1000;
+		int refreshGPSdistance = 20;
 
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
@@ -105,7 +105,7 @@ public class MainActivity extends Activity implements OnClickListener,
 						+ mapSourceNames.get(mapSourceIndex));
 		mMapView.setTileSource(tileSource);
 
-		mMapView.getController().setZoom(3);
+		mMapView.getController().setZoom(10);
 		
 		mCompass = (ImageView) findViewById(R.id.compass);
 		mCompass.setOnClickListener(this);
@@ -156,7 +156,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		} else if (itemId == R.id.menu_start_stop_sync) {
 			Log.d("sync", "status: " + Server.getInstance().startedPOISync());
 			if (Server.getInstance().startedPOISync()) {
-				Server.getInstance().stopServer();
+				Server.getInstance().stopPOISync();
 			} else {
 				Server.getInstance().startPOISync();
 			}
@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					if (tempPoint.getUID() < 0) {
 						try {
 							Server.getInstance().sendMessage(
-									tempPoint.toJSONString() + "\n");
+									"addPoint:" + tempPoint.toJSONString() + "\n");
 							// TODO validate this TODO
 							// TODO Seth delete item so when server pushes back
 							// we don't keep duplicate

@@ -4,7 +4,7 @@ import itertools
 
 rose = poi.POI(0,
     "Rose",
-    lambda t:40.0,
+    lambda t:39.0,
     lambda t:-88.0, 
     "type 1",
     {"desc":"rose"})

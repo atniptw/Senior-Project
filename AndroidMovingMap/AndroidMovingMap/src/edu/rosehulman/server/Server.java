@@ -96,30 +96,15 @@ public class Server {
 		}
 	}
 	
-  	public void sendMessage(String msg) throws IOException
+  	public boolean sendMessage(String msg) throws IOException
   	{
-  		try
+  		// TODO this is bad as we don't send messages
+  		if (ListenPOISocket.getInstance().acked == true)
   		{
-	  		while (ListenPOISocket.getInstance().acked != true)
-	  		{
-				Thread.sleep(50); // TODO FIXME locks up main thread???
-	  		}	  			
-  		} catch (InterruptedException e) {
-		}
-  		ListenPOISocket.getInstance().sendMessage(msg);
-  	}
-
-  	public void stopServer()
-  	{
-	  	if (ListenPOISocket.instance != null)
-		{
-	  		try {
-				this.sendMessage("stopPOI");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	  		ListenPOISocket.instance.stopThread = true;
-	  		ListenPOISocket.instance = null;
+  	  		ListenPOISocket.getInstance().sendMessage(msg);
+  	  		return true;
+		} else {
+			return false;
 		}
   	}
 
@@ -128,26 +113,52 @@ public class Server {
   		ListenPOISocket.getInstance();
   	}
 
+  	public void stopServer()
+  	{
+	  	if (ListenPOISocket.instance != null)
+		{
+	  		try {
+				this.sendMessage("close");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	  		ListenPOISocket.instance.stopThread = true;
+	  		ListenPOISocket.instance = null;
+		}
+  	}
+
+  	public boolean serverRunning()
+  	{
+  		return ListenPOISocket.instance != null;
+  	}
+
   	public void startPOISync()
   	{
   		try {
-			ListenPOISocket.getInstance().pullFrom = true;
-			this.sendMessage("sendPOI");
+			if (this.sendMessage("sendPOI")) {
+				ListenPOISocket.getInstance().pullFrom = true;
+			}	
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
   	}
   	
-  	public boolean serverRunning()
+  	public void stopPOISync()
   	{
-  		return ListenPOISocket.instance != null;
+  		try {
+  			if (this.serverRunning())
+  				this.sendMessage("stopPOI");
+  				ListenPOISocket.getInstance().pullFrom = false;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
   	}
-  	
+
   	public boolean startedPOISync()
   	{
   		return (ListenPOISocket.getInstance().pullFrom == true);
   	}
-  	
+
   	protected static class ListenPOISocket extends Thread {
 		private static ListenPOISocket instance = null;
 		private Socket socket;
@@ -213,35 +224,39 @@ public class Server {
 				}
 		  		this.acked = true;
 
-		  		while ( this.pullFrom == false && this.stopThread == false )
+		  		while ( this.stopThread == false )
 		  		{
-		  			Thread.sleep(50);
-		  		}
-		  		
-				while ( this.stopThread == false )
-				{
-					Thread.sleep(50);
-
-					Log.d("POI", "waiting on message");
-					message = getMessage();
-					Log.d("POI", "got message");
-					if (message == null)
+			  		while ( this.pullFrom == false && this.stopThread == false )
+			  		{
+			  			Thread.sleep(50);
+			  		}
+			  		
+					while ( this.pullFrom == true && this.stopThread == false )
 					{
-						break;
+						Thread.sleep(50);
+	
+						Log.d("POI", "waiting on message");
+						message = getMessage();
+						Log.d("POI", "got message");
+						if (message == null)
+						{
+							break;
+						}
+					    Log.d("POI",  "socket server says: omitted"); //" + message);
+						if (Server.getInstance().updatePOIFromString(message))
+						{
+							Log.d("POI", "socket dispatching updateDisplay handler");
+							Server.updatePOIHandler.sendMessage(Server.updatePOIHandler.obtainMessage());
+						}
+	
+						// TODO Seth or Sam do this in a different way
+						// this is to attempt to flush data we don't have time to parse because it arrives to quickly
+						byte dst[] = new byte[10000];
+						in.read(dst);						
 					}
-				    Log.d("POI",  "socket server says: omitted"); //" + message);
-					if (Server.getInstance().updatePOIFromString(message))
-					{
-						Log.d("POI", "socket dispatching updateDisplay handler");
-						Server.updatePOIHandler.sendMessage(Server.updatePOIHandler.obtainMessage());
-					}
-
-					// TODO Seth or Sam do this in a different way
-					// this is to attempt to flush data we don't have time to parse because it arrives to quickly
-					byte dst[] = new byte[10000];
-					in.read(dst);
 					
-				};
+					
+		  		}
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -253,6 +268,7 @@ public class Server {
 			{
 				try {
 					Log.d("POI", "in finally");
+					sendMessage("close");
 					if (socket != null)
 						socket.close();
 					if (in != null)

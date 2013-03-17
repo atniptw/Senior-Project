@@ -23,8 +23,13 @@ class ServerSocket(threading.Thread):
         self.connectionNumber = connectionNumber
         self.clientsocket = clientsocket
         self.addr = addr
+
+        self.overlays = set(["type 1", "type 2"])
+        self.lastSync = -1.0
+
         self.sendingData = False
         self.close = False
+
 
     def run(self):
         dataBlock = 1
@@ -45,15 +50,14 @@ class ServerSocket(threading.Thread):
             t1 = threading.Thread(target = self.POISocketListener)
             t1.start()
 
-
             t2 = threading.Thread(target = self.POISocketSender)
             t2.start()
 
             t1.join()
-            t2.join(0.1)    # After listen thread has died kill send thread after 0.1 seconds
+            t2.join(0.1)    # After listen thread has [ended, died]
+                            # [kill, collect] send thread within 0.1 seconds
 
             print "\tSS DEBUG(%d): threads joined time to close" %(self.connectionNumber)
-
             self.clientsocket.close()
         except KeyboardInterrupt:
             print "\tserverSocket broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
@@ -75,23 +79,53 @@ class ServerSocket(threading.Thread):
                     if tempData == "":
                         continue
 
+                    if tempData == "close":
+                        self.close = True
+                        print "\tPSL exiting from stopPOI (%d)" %(self.connectionNumber)
+                        return
+
                     if tempData == "sendPOI":
                         self.sendingData = True
                         continue
 
                     if tempData == "stopPOI":
-                        self.close = True
                         self.sendingData = False
-                        print "\tPSL exiting from stopPOI (%d)" %(self.connectionNumber)
-                        return
+                        continue
 
-                    try:
-                        tempPOI = poi.POI(tempData)
-                        tempPOI.setUID(nextUIDgenerator.next())
-                        POIelements[tempPOI.getUID()] = tempPOI
-                        print "\tparsed to:", tempPOI
-                    except Exception as e:
-                        print "\tPSL failed to parse data: ", e
+                    if tempData.startswith("addOverlay:") or tempData.startswith("removeOverlay:"):
+                        # partition returns 3-tuple (before, seperator, after)
+                        action, sep, overlayName = tempData.partition(":")
+
+                        if action.startswith("add"):
+                            self.overlays.add(overlayName)
+                        else:
+                            # remove throws error if not present, discard does not
+                            self.overlays.discard(overlayName)    
+
+                        # resync all points (to force new overlay points sync)
+                        self.lastSync = -1.0
+                        continue
+
+                    if tempData.startswith("addPoint:") or tempData.startswith("removePoint:"):
+                        # partition returns 3-tuple (before, seperator, after)
+                        action, sep, point = tempData.partition(":")
+                        try:
+                            tempPOI = poi.POI(point)
+
+                            if action.startswith("add"):
+                                tempPOI.setUID(nextUIDgenerator.next())
+                                POIelements[tempPOI.getUID()] = tempPOI
+                                print "\tadded:", tempPOI, "as UID:", tempPOI.getUID()
+                            else:
+                                removed = POIelements.pop(tempPOI.getUID(), "not present")
+                                if removed != "not present":
+                                    print "\tremoved POI with UID:", tempPOI.getUID()
+                                else:
+                                    print "\tfailed to remove POI:", tempPOI
+
+                        except Exception as e:
+                            print "\tPSL failed to parse data: ", e
+                        continue
 
         except KeyboardInterrupt:
             print "\tPSL broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
@@ -105,17 +139,24 @@ class ServerSocket(threading.Thread):
             print "\tin POISocketSender"
             messageNum = 1
 
-            while self.sendingData != True and self.close == False:
-                time.sleep(.1)
+            while self.close == False:
+                while self.sendingData != True and self.close == False:
+                    time.sleep(0.1)
 
-            while self.sendingData == True:
-                jsonPOI = json.dumps({"POI":dict([(uid,value.toDict()) for uid,value in POIelements.items()])})
+                while self.sendingData == True and self.close == False:
+                    POIToSend = [(uid,point.toDict()) for uid,point in POIelements.items() if point.getTimestamp() >= self.lastSync]
+                    jsonPOI = json.dumps({"POI":dict(POIToSend)})
 
-                print "\tSS sending ({0}): {1} ({2} points) for connection {3} ".format(messageNum, "omitted", len(POIelements), self.connectionNumber)
-                self.clientsocket.sendall(jsonPOI + "\n")
+                    print "\tSS message #{0} : {1} ({2} points, connection {3}, lastSync {4})".format(
+                        messageNum, "not shown", len(POIToSend), self.connectionNumber, self.lastSync)
 
-                messageNum += 1
-                time.sleep(1.375 + (random.random() / 4.0))
+                    self.lastSync = time.time()
+                    self.clientsocket.sendall(jsonPOI + "\n")
+
+                    messageNum += 1
+                    time.sleep(1.375 + (random.random() / 4.0))
+
+
         except KeyboardInterrupt:
             print "\tPSS broke by KeyboardInterrupt (%d)" %(self.connectionNumber)
         except Exception as e:
