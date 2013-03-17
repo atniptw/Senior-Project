@@ -21,12 +21,11 @@ import android.util.Log;
 import edu.rosehulman.androidmovingmap.MainActivity;
 import edu.rosehulman.server.POI;
 
-public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
+public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListener<POI>{
 	
 	private ItemizedIconOverlay<POI> mIIO;
 
-	// FIXME SETH did this cause he is bad and likes to make things public
-	public List<POI> mOverlays = new ArrayList<POI>();
+	private List<POI> mOverlays = new ArrayList<POI>();
 
 	private Drawable mIcon;
 	private String mName;
@@ -42,6 +41,10 @@ public class AMMItemizedOverlay implements OnItemGestureListener<POI>{
 		mContext = context;
 		
 		OverlayIconRegistry.getInstance().registerIcon(name, icon);
+	}
+	
+	public List<POI> getOverlays() {
+		return mOverlays;
 	}
 	
 	public void addOverlay(POI poi) {
