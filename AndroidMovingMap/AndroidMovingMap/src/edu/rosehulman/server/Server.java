@@ -96,12 +96,12 @@ public class Server {
 		}
 	}
 	
-  	public boolean sendMessage(String msg) throws IOException
+  	public boolean sendMessage(String message) throws IOException
   	{
-  		// TODO this is bad as we don't send messages
+  		// TODO this is bad as we fail to send the message
   		if (ListenPOISocket.getInstance().acked == true)
   		{
-  	  		ListenPOISocket.getInstance().sendMessage(msg);
+  	  		ListenPOISocket.getInstance().sendMessage(message);
   	  		return true;
 		} else {
 			return false;
@@ -154,6 +154,27 @@ public class Server {
 		}
   	}
 
+  	public void addOverlay(String overlay)
+  	{
+  		try {
+			sendMessage("addOverlay:" + overlay);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+  	}
+
+  	public void removeOverlay(String overlay)
+  	{
+  		try {
+			sendMessage("removeOverlay:" + overlay);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+  	}
+
+  	
   	public boolean startedPOISync()
   	{
   		return (ListenPOISocket.getInstance().pullFrom == true);
