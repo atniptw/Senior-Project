@@ -33,18 +33,21 @@ import org.json.JSONObject;
 import edu.rosehulman.server.POI;
 
 
+import android.R;
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 @SuppressLint("UseSparseArrays")
 public class Server {
 	private static Server instance = null;
 	
-	private final static String connect_to = "queen.wlan.rose-hulman.edu";
-//	private final static String connect_to = "10.0.0.13";
+	private static String connect_to = "bad address";
 	private final static int connect_port = 5047;
 
 	public Map<Integer,POI> POIelements;
@@ -52,6 +55,11 @@ public class Server {
 
 	private Server() { POIelements = new HashMap<Integer,POI>(); }
 
+	public void setServerAddress(String address)
+	{
+		Server.connect_to = address;
+	}
+	
 	public static Server getInstance()
 	{
 		if (Server.instance == null)
@@ -96,7 +104,7 @@ public class Server {
 		}
 	}
 	
-  	public boolean sendMessage(String message) throws IOException
+  	public boolean sendMessage(String message) throws Exception
   	{
   		// TODO this is bad as we fail to send the message
   		if (ListenPOISocket.getInstance().acked == true)
@@ -119,7 +127,7 @@ public class Server {
 		{
 	  		try {
 				this.sendMessage("close");
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 	  		ListenPOISocket.instance.stopThread = true;
@@ -138,7 +146,7 @@ public class Server {
 			if (this.sendMessage("sendPOI")) {
 				ListenPOISocket.getInstance().pullFrom = true;
 			}	
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
   	}
@@ -149,7 +157,7 @@ public class Server {
   			if (this.serverRunning())
   				this.sendMessage("stopPOI");
   				ListenPOISocket.getInstance().pullFrom = false;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
   	}
@@ -158,7 +166,7 @@ public class Server {
   	{
   		try {
 			sendMessage("addOverlay:" + overlay);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -168,7 +176,7 @@ public class Server {
   	{
   		try {
 			sendMessage("removeOverlay:" + overlay);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -224,7 +232,7 @@ public class Server {
 	  	public void run() {
 	  		try{
 	  			//open a socket connecting us to the server
-	  			Log.d("POI", "Opening Socket");	
+	  			Log.d("POI", "Opening Socket to: '" + connect_to + "'");	
 	  			socket = new Socket(connect_to, connect_port);
 	  			Log.d("POI", "Socket Connected!");
 

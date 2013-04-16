@@ -1,6 +1,5 @@
 package edu.rosehulman.androidmovingmap;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +27,7 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -37,7 +37,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
-import edu.rosehulman.overlays.AMMItemizedOverlay;
 import edu.rosehulman.overlays.IItemizedOverlay;
 import edu.rosehulman.server.POI;
 import edu.rosehulman.server.Server;
@@ -45,8 +44,11 @@ import edu.rosehulman.server.Server;
 public class MainActivity extends Activity implements OnClickListener,
 		Serializable {
 
+	private SharedPreferences prefs;
+
 	private OSMMapView mMapView;
 	private LocationManager locationManager;
+
 	LocationProvider provider;
 	private MyLocationOverlay deviceOverlay;
 	
@@ -55,11 +57,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	private boolean mNorthUp;
 
 	private XYTileSource tileSource;
-	// private String mapSourcePrefix = "http://king.rose-hulman.edu/~king/testMessage/";
-	 private String mapSourcePrefix = "http://queen.wlan.rose-hulman.edu/";
-	// private String mapSourcePrefix = "http://10.0.0.13/";
+
+	private String mapSourcePrefix = "initial source prefix";
 	private ArrayList<String> mapSourceNames = new ArrayList<String>(
-			Arrays.asList("map1/", "map2/"));
+			Arrays.asList("/map1/", "/map2/"));
 	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(
 			Arrays.asList(16, 4));
 	private int mapSourceIndex = 0;
@@ -78,6 +79,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		
 		int refreshGPStime = 1000;
 		int refreshGPSdistance = 20;
 
@@ -100,13 +103,17 @@ public class MainActivity extends Activity implements OnClickListener,
 		
 		// Comment back in to use MAPNIK server data
 		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
+
+		String server_name = this.prefs.getString("KEY_SERVER", "bad preferences"); 
+		mapSourcePrefix = server_name;
+
 		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
 				mapMaxZoom.get(mapSourceIndex),
-				256, ".png", mapSourcePrefix
-						+ mapSourceNames.get(mapSourceIndex));
+				256, ".png", mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
+
 		mMapView.setTileSource(tileSource);
 
-		mMapView.getController().setZoom(10);
+		mMapView.getController().setZoom(13);
 		
 		mCompass = (ImageView) findViewById(R.id.compass);
 		mCompass.setOnClickListener(this);
@@ -115,6 +122,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		mFindMe.setOnClickListener(this);
 
 		Server.getInstance().updatePOIHandler = invalidateDisplay;
+		Server.getInstance().setServerAddress(server_name);
 	}
 
 	@Override
@@ -164,8 +172,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			return true;
 		} else if (itemId == R.id.menu_push_server) {
 			Log.d("POI", "attempting to sync onto server");
-			for (IItemizedOverlay type : mMapView.getAMMOverlayManager()
-					.getOverlays()) {
+			for (IItemizedOverlay type : mMapView.getAMMOverlayManager().getOverlays()) {
 				Iterator<POI> iter = type.getOverlays().iterator();
 				while (iter.hasNext()) {
 					POI tempPoint = iter.next();
@@ -173,11 +180,8 @@ public class MainActivity extends Activity implements OnClickListener,
 						try {
 							Server.getInstance().sendMessage(
 									"addPoint:" + tempPoint.toJSONString() + "\n");
-							// TODO validate this TODO
-							// TODO Seth delete item so when server pushes back
-							// we don't keep duplicate
 							iter.remove();
-						} catch (IOException e) {
+						} catch (Exception e) {
 							Log.d("POI", "failed to send POI");
 						}
 					}

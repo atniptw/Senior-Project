@@ -4,7 +4,7 @@
     <PreferenceCategory>
         <EditTextPreference
             android:key="@string/key_server"
-            android:title="Server Connection" />
+            android:title="Server Connection" android:defaultValue="queen.wlan.rose-hulman.edu" android:summary="IP address or Hostname of Server"/>
 
         <CheckBoxPreference
             android:key="@string/key_auto_sync"
