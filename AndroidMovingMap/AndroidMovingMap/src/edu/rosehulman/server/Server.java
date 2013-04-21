@@ -58,7 +58,7 @@ public class Server {
 
 	private Server()
 	{
-		POIelements = new HashMap<Integer,POI>();
+		Server.POIelements = new HashMap<Integer,POI>();
 		GPS = new double[2];
 	}
 
@@ -98,12 +98,8 @@ public class Server {
 	
 	public boolean updatePOIFromString(String data)
 	{
-		try {
-			// TODO in the past all POI were synced on every data transfer so clear the map of all POI each time
-			// TODO this helps with the ghost POI problem where points remaining after closing and reopening app
-
-			// TODO is this good?
-			Server.POIelements.clear();
+		try {		
+			Log.d("POI data", data);
 			
 			JSONObject text = new JSONObject(data);
 			JSONObject JSONPOIelements = text.getJSONObject("POI");
@@ -288,9 +284,10 @@ public class Server {
 					message = getMessage();
 					if (message == null)
 					{
+						Log.d("SERVER", "got null message");
 						break;
 					}
-					Log.d("SERVER",  "socket server got message : '" + message.substring(0, 20) + "...'");
+					Log.d("SERVER",  "socket server got message : '" + message.substring(0, Math.min(20, message.length())) + "...'");
 
 					if (message.contains("\"GPS\":") && Server.getInstance().updateGPSFromString(message))
 					{
@@ -304,9 +301,9 @@ public class Server {
 					}
 
 					// TODO Seth or Sam do this in a different way
-					// this is to attempt to flush data we don't have time to parse because it arrives to quickly
-					byte dst[] = new byte[10000];
-					in.read(dst);						
+					// this was an attempt to flush data we don't have time to parse because it arrives to quickly
+					//byte dst[] = new byte[10000];
+					//in.read(dst);						
 		  		}
 			} catch (UnknownHostException e) {
 				e.printStackTrace();

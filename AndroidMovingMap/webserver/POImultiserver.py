@@ -152,7 +152,8 @@ class ServerSocket(threading.Thread):
                     time.sleep(0.1)
 
                 while self.sendingData == True and self.close == False:
-                    POIToSend = [(uid,point.toDict()) for uid,point in POIelements.items() if point.getTimestamp() >= self.lastSync]
+                    # TODO only sent requested types
+                    POIToSend = [(uid,point.toDict()) for uid,point in POIelements.items() if point.getTimestamp() >= self.lastSync] # and point.type in self.overlays]
                     jsonPOI = json.dumps({"POI":dict(POIToSend)})
 
                     print "\tSS message #{0} : {1} ({2} points, connection {3}, lastSync {4})".format(
@@ -162,7 +163,7 @@ class ServerSocket(threading.Thread):
                     self.clientsocket.sendall(jsonPOI + "\n")
 
                     messageNum += 1
-                    time.sleep(1.375 + (random.random() / 4.0))
+                    time.sleep(3.875 + (random.random() / 4.0)) # 4 second average pause
 
 
         except KeyboardInterrupt:
