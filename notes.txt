@@ -1,0 +1,8 @@
+Performance - How many POI's, how fast can someone be going and what scale would the map need to be at so that the app still works
+Tracking all the people using the system
+Benchmarking
+Is it practical to track everyone on the system 
+Explain how everything is stored on the server
+List out things that we would do differently, and how we would expand the system if given more time
+Improve how to filter POI types
+Document rotain, and scale
