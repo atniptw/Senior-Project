@@ -1,20 +1,33 @@
 number  direction   (message)
 1           ->      "hello"
 2       <-          "ACKhello"
-3           ->      "sendPOI"
-4           ->      "stopPOI"
-5       <-          "POI:<JSON POI list>"
-6           ->      "addOverlay:<POI TYPE>"
-7           ->      "removeOverlay:<POI TYPE>"
-8           ->      "addPoint:<POI>"
-9           ->      "removePoint:<POI>"
-10          ->      "close"
 
-server on receiving 1 returns 2
-server on receiving 3 starts periodic sending of number 5
-server on receiving 4 stops periodic sending of number 5
-server on receiving 6 will start including POI of type <POI TYPE> in number 5
-server on receiving 7 will stop including POI of type <POI TYPE> in number 5
-server on receiving 8 will add POI to global list of POI
-server on receiving 9 will remove POI from global list of POI 
-server on receiving 10 will close socket and delete preferences
+3       <-          "GPS:<JSON GPS data>"
+
+4           ->      "sendPOI"
+5           ->      "stopPOI"
+6       <-          "POI:<JSON POI list>"
+
+
+7           ->      "addOverlay:<POI TYPE>"
+8           ->      "removeOverlay:<POI TYPE>"
+
+9           ->      "addPoint:<POI>"
+10           ->      "removePoint:<POI>"
+
+11          ->      "close"
+
+server on receiving 1 returns 2 [3*]
+    *If server has been configured with a GPS location
+    *it will send that data after ACKhello and at other semi-random times 
+
+server on receiving 4 starts periodic sending of number 6
+server on receiving 5 stops periodic sending of number 6
+
+server on receiving 7 will start including POI of type <POI TYPE> in number 6
+server on receiving 8 will stop including POI of type <POI TYPE> in number 6
+
+server on receiving 9 will add POI to global list of POI
+server on receiving 10 will remove POI from global list of POI 
+
+server on receiving 11 will close socket and delete preferences

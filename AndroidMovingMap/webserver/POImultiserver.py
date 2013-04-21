@@ -24,6 +24,9 @@ class ServerSocket(threading.Thread):
         self.clientsocket = clientsocket
         self.addr = addr
 
+        self.sendGPS = True
+        self.GPSCords = {"latitude":39.4826527, "longitude":-87.3304517}
+
         self.overlays = set(["type 1", "type 2"])
         self.lastSync = -1.0
 
@@ -43,6 +46,11 @@ class ServerSocket(threading.Thread):
                 if data == "hello":
                     print "\tSS DEBUG(%d): received 'hello', time to ACK" %(self.connectionNumber)
                     self.clientsocket.sendall("ACKhello\n")
+
+                    if self.sendGPS:
+                        print "\tSS DEBUG(%d): sendGPS = true, sending GPS" %(self.connectionNumber)
+                        jsonGPS = json.dumps({"GPS":self.GPSCords})
+                        self.clientsocket.sendall(jsonGPS + "\n")
                     break
 
                 print "\tSS DEBUG(%d): got '%s' <> 'hello'" %(self.connectionNumber, dataCombined)
