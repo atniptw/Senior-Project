@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	private String mapSourcePrefix = "initial source prefix";
 	private ArrayList<String> mapSourceNames = new ArrayList<String>(
-			Arrays.asList("/map1/", "/map2/"));
+			Arrays.asList("map1", "map2"));
 	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(
 			Arrays.asList(16, 4));
 	private int mapSourceIndex = 0;
@@ -105,11 +105,13 @@ public class MainActivity extends Activity implements OnClickListener,
 		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
 
 		String server_name = this.prefs.getString("KEY_SERVER", "bad preferences"); 
-		mapSourcePrefix = server_name;
+		Log.d("server_name", server_name);
+
+		mapSourcePrefix = "http://" + server_name;
 
 		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
 				mapMaxZoom.get(mapSourceIndex),
-				256, ".png", mapSourcePrefix + mapSourceNames.get(mapSourceIndex));
+				256, ".png", mapSourcePrefix + "/" + mapSourceNames.get(mapSourceIndex) + "/");
 
 		mMapView.setTileSource(tileSource);
 

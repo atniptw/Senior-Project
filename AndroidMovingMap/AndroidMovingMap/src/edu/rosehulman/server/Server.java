@@ -50,10 +50,17 @@ public class Server {
 	private static String connect_to = "bad address";
 	private final static int connect_port = 5047;
 
-	public Map<Integer,POI> POIelements;
+	public static double[] GPS;
+	public static boolean GPSsent = false;
+	
+	public static Map<Integer,POI> POIelements;
   	public static Handler updatePOIHandler;
 
-	private Server() { POIelements = new HashMap<Integer,POI>(); }
+	private Server()
+	{
+		POIelements = new HashMap<Integer,POI>();
+		GPS = new double[2];
+	}
 
 	public void setServerAddress(String address)
 	{
@@ -69,33 +76,54 @@ public class Server {
 		return Server.instance;
 	}
 	
+	public boolean updateGPSFromString(String data)
+	{
+		try {
+			JSONObject text = new JSONObject(data);
+			JSONObject JSONGPSelements = text.getJSONObject("GPS");
+	
+			JSONArray names = JSONGPSelements.names();
+//			Log.d("GPSelements", "size: " + JSONGPSelements.length() + " | names: " + names);
+			Log.d("GPS data", data);
+
+			Server.GPS[0] = JSONGPSelements.getDouble("latitude");
+			Server.GPS[1] = JSONGPSelements.getDouble("longitude");
+			
+			return true;
+		} catch (JSONException e) {
+			Log.d("Server updateGPS", "malformed or bad data:" + data);
+			return false;
+		}
+	}
+	
 	public boolean updatePOIFromString(String data)
 	{
 		try {
-			// TODO currently all POI are synced on every data transfer so clear the map of all POI each time
+			// TODO in the past all POI were synced on every data transfer so clear the map of all POI each time
 			// TODO this helps with the ghost POI problem where points remaining after closing and reopening app
-			
-			this.POIelements.clear();
+
+			// TODO is this good?
+			Server.POIelements.clear();
 			
 			JSONObject text = new JSONObject(data);
-			JSONObject POIelements = text.getJSONObject("POI");
+			JSONObject JSONPOIelements = text.getJSONObject("POI");
 	
-			JSONArray names = POIelements.names();
-			Log.d("POIelements", "size: " + POIelements.length() + " | names: " + names);
+			JSONArray names = JSONPOIelements.names();
+			Log.d("POIelements", "size: " + JSONPOIelements.length() + " | names: " + names);
 			
-			for (int i = 0; i < POIelements.length(); i++)
+			for (int i = 0; i < JSONPOIelements.length(); i++)
 			{
 				String UIDstring = names.getString(i);
 	
 //				Log.d("POIelement", "name: " + UIDstring);
 				int UIDint = Integer.parseInt(UIDstring);
 	
-				JSONObject POIelement = POIelements.getJSONObject(UIDstring);
+				JSONObject JSONPOIelement = JSONPOIelements.getJSONObject(UIDstring);
 //				Log.d("POIelement", "element: " + POIelement);
 			
-				POI point = new POI(POIelement);
-				this.POIelements.remove(UIDint);
-				this.POIelements.put(UIDint, point);
+				POI point = new POI(JSONPOIelement);
+				Server.POIelements.remove(UIDint);
+				Server.POIelements.put(UIDint, point);
 			}
 			return true;
 		} catch (JSONException e) {
@@ -200,8 +228,7 @@ public class Server {
 	  	public volatile boolean pullFrom = false;
 	  	public volatile boolean pushTo = false;
 	  	
-	  	
-	  	private ListenPOISocket()
+	   	private ListenPOISocket()
 	  	{
 	  	}
 
@@ -242,49 +269,44 @@ public class Server {
 
 	  			sendMessage("hello");
 				String message = getMessage();
-				if (!message.equals("ACKhello"))
+				if (message.equals("ACKhello"))
+				{
+					Log.d("POI", "socket server replied ackHello");
+				}
+				else
 				{
 					Log.d("POI", "socket server did not ackHello instead received |" + message + "|");
 					return;
 				}
-				else
-				{
-					Log.d("POI", "socket server replied ackHello");
-				}
 		  		this.acked = true;
 
 		  		while ( this.stopThread == false )
-		  		{
-			  		while ( this.pullFrom == false && this.stopThread == false )
-			  		{
-			  			Thread.sleep(50);
-			  		}
-			  		
-					while ( this.pullFrom == true && this.stopThread == false )
+		  		{	
+		  			Thread.sleep(50);
+	
+					Log.d("POI", "waiting on message");
+					message = getMessage();
+					if (message == null)
 					{
-						Thread.sleep(50);
-	
-						Log.d("POI", "waiting on message");
-						message = getMessage();
-						Log.d("POI", "got message");
-						if (message == null)
-						{
-							break;
-						}
-					    Log.d("POI",  "socket server says: omitted"); //" + message);
-						if (Server.getInstance().updatePOIFromString(message))
-						{
-							Log.d("POI", "socket dispatching updateDisplay handler");
-							Server.updatePOIHandler.sendMessage(Server.updatePOIHandler.obtainMessage());
-						}
-	
-						// TODO Seth or Sam do this in a different way
-						// this is to attempt to flush data we don't have time to parse because it arrives to quickly
-						byte dst[] = new byte[10000];
-						in.read(dst);						
+						break;
 					}
-					
-					
+					Log.d("SERVER",  "socket server got message : '" + message.substring(0, 20) + "...'");
+
+					if (message.contains("\"GPS\":") && Server.getInstance().updateGPSFromString(message))
+					{
+						Log.d("POI", "socket got GPS data");
+					}
+
+					if (this.pullFrom && message.contains("\"POI\":") && Server.getInstance().updatePOIFromString(message))
+					{
+						Log.d("POI", "socket dispatching updateDisplay handler");
+						Server.updatePOIHandler.sendMessage(Server.updatePOIHandler.obtainMessage());
+					}
+
+					// TODO Seth or Sam do this in a different way
+					// this is to attempt to flush data we don't have time to parse because it arrives to quickly
+					byte dst[] = new byte[10000];
+					in.read(dst);						
 		  		}
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -297,13 +319,20 @@ public class Server {
 			{
 				try {
 					Log.d("POI", "in finally");
-					sendMessage("close");
-					if (socket != null)
-						socket.close();
+					ListenPOISocket.instance = null;
+					
+					if (out != null)
+					{
+						out.close();
+						sendMessage("close");
+					}
+
 					if (in != null)
 						in.close();
-					if (out != null)
-						out.close();
+
+					if (socket != null)
+						socket.close();
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
