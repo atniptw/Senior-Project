@@ -115,11 +115,11 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		mapSourcePrefix = "http://" + server_name;
 
-//		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
-//				mapMaxZoom.get(mapSourceIndex),
-//				256, ".png", mapSourcePrefix + "/" + mapSourceNames.get(mapSourceIndex) + "/");
-//
-//		mMapView.setTileSource(tileSource);
+		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
+				mapMaxZoom.get(mapSourceIndex),
+				256, ".png", mapSourcePrefix + "/" + mapSourceNames.get(mapSourceIndex) + "/");
+
+		mMapView.setTileSource(tileSource);
 
 		mMapView.getController().setZoom(13);
 
