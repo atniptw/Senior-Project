@@ -47,8 +47,8 @@ class POI:
     def toDict(self):
         newAttr = self.attributes
         # for Demo reasons so that POI can move without constant update
-        if self.latitudeF(0) != self.latitudeF(1):
-            self.timestamp = time.time() + 0.01
+        if self.latitudeF(0) != self.latitudeF(1) or self.longitudeF(0) != self.longitudeF(1):
+            self.timestamp = time.time()
 
         newAttr["latitude"] = self.latitudeF(time.time())
         newAttr["longitude"] = self.longitudeF(time.time())

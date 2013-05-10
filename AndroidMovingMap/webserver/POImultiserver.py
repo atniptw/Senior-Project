@@ -129,7 +129,7 @@ class ServerSocket(threading.Thread):
                                 if removed != "not present":
                                     print "\tremoved POI with UID:", tempPOI.getUID()
                                 else:
-                                    print "\tfailed to remove POI:", tempPOI
+                                    print "\tfailed to remove POI:", tempPOI, POIelements.keys()
 
                         except Exception as e:
                             print "\tPSL failed to parse data: ", e
@@ -153,13 +153,14 @@ class ServerSocket(threading.Thread):
 
                 while self.sendingData == True and self.close == False:
                     # TODO only sent requested types
-                    POIToSend = [(uid,point.toDict()) for uid,point in POIelements.items() if point.getTimestamp() >= self.lastSync] # and point.type in self.overlays]
+                    syncTime = time.time()
+                    POIToSend = [(uid, point.toDict()) for uid, point in POIelements.items() if point.getTimestamp() >= self.lastSync] # and point.type in self.overlays]
                     jsonPOI = json.dumps({"POI":dict(POIToSend)})
 
                     print "\tSS message #{0} : {1} ({2} points, connection {3}, lastSync {4})".format(
                         messageNum, "not shown", len(POIToSend), self.connectionNumber, self.lastSync)
 
-                    self.lastSync = time.time()
+                    self.lastSync = syncTime
                     self.clientsocket.sendall(jsonPOI + "\n")
 
                     messageNum += 1

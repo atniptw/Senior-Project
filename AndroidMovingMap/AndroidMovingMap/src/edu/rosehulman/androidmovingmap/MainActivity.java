@@ -200,10 +200,12 @@ public class MainActivity extends Activity implements OnClickListener,
 					POI tempPoint = new POI(UIDToRemove, "", 0.0, 0.0, "", new TreeMap<String,String>());
 					try {
 						Server.getInstance().sendMessage("removePoint:" + tempPoint.toJSONString() + "\n");
+						Server.POIelements.remove(UIDToRemove);
 					} catch (Exception e) {
 						Log.d("POI", "failed to remove UID: " + UIDToRemove);
 					}
 				}
+				Server.POIUIDToDelete.clear();
 			}
 			return true;
 		} else if (itemId == R.id.choose_poi_to_display) {
