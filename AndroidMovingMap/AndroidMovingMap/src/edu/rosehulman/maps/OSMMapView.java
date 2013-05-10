@@ -35,12 +35,18 @@ public class OSMMapView extends MapView {
 		mContext = context;
 		mLongPressListener = new GestureDetector(context,
 				new LongPressGestureListener());
-		getOverlays().addAll(mOverlayManager.getHandles());
-		
 		
 		deviceOverlay = new MyLocationOverlay(mContext, this);
 		deviceOverlay.enableFollowLocation();
 		deviceOverlay.enableMyLocation();
+		
+		setOverylays();
+	}
+
+	public void setOverylays() {
+		getOverlays().clear();
+		getOverlays().addAll(mOverlayManager.getHandles());
+		
 		getOverlays().add(deviceOverlay);
 	}
 

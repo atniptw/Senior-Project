@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.osmdroid.tileprovider.MapTile;
@@ -34,10 +35,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 import edu.rosehulman.maps.OSMMapView;
+import edu.rosehulman.overlays.AMMItemizedOverlay;
 import edu.rosehulman.overlays.IItemizedOverlay;
+import edu.rosehulman.overlays.OverlayIconRegistry;
 import edu.rosehulman.server.POI;
 import edu.rosehulman.server.Server;
 
@@ -51,14 +57,16 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	LocationProvider provider;
 	private MyLocationOverlay deviceOverlay;
-	
+
 	private ImageView mCompass;
 	private ImageView mFindMe;
 	private boolean mNorthUp;
 
 	private XYTileSource tileSource;
 
+
 	private String mapSourcePrefix = "initial source prefix";
+
 	private ArrayList<String> mapSourceNames = new ArrayList<String>(
 			Arrays.asList("map1", "map2"));
 	private ArrayList<Integer> mapMaxZoom = new ArrayList<Integer>(
@@ -86,10 +94,9 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
-		provider = locationManager
-				.getProvider(LocationManager.GPS_PROVIDER);
+		provider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				refreshGPStime, refreshGPSdistance, listener);		
+				refreshGPStime, refreshGPSdistance, listener);
 
 		mMapView = (OSMMapView) findViewById(R.id.map_view);
 		mMapView.setClickable(true);
@@ -99,8 +106,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		deviceOverlay = new MyLocationOverlay(this, mMapView);
 		deviceOverlay.enableFollowLocation();
 		deviceOverlay.enableMyLocation();
-		
-		
+
 		// Comment back in to use MAPNIK server data
 		// mMapView.setTileSource(TileSourceFactory.MAPNIK);
 
@@ -109,14 +115,14 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		mapSourcePrefix = "http://" + server_name;
 
-		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
-				mapMaxZoom.get(mapSourceIndex),
-				256, ".png", mapSourcePrefix + "/" + mapSourceNames.get(mapSourceIndex) + "/");
-
-		mMapView.setTileSource(tileSource);
+//		tileSource = new XYTileSource("local" + mapSourceIndex, null, 0, 
+//				mapMaxZoom.get(mapSourceIndex),
+//				256, ".png", mapSourcePrefix + "/" + mapSourceNames.get(mapSourceIndex) + "/");
+//
+//		mMapView.setTileSource(tileSource);
 
 		mMapView.getController().setZoom(13);
-		
+
 		mCompass = (ImageView) findViewById(R.id.compass);
 		mCompass.setOnClickListener(this);
 
@@ -191,14 +197,52 @@ public class MainActivity extends Activity implements OnClickListener,
 			}
 			return true;
 		} else if (itemId == R.id.choose_poi_to_display) {
-			Toast.makeText(this, "I can totally choose what's displayed",
-					Toast.LENGTH_SHORT).show();
-			// AddPOITypeDialogFragment.newInstance(
-			// mMapView.getAMMOverlayManager(), this).show(
-			// getFragmentManager(), "lol");
+			new ChooseDisplayedPOIFragment().show(getFragmentManager(),
+					"show displayed poi dialog");
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private class ChooseDisplayedPOIFragment extends DialogFragment {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			ListView listView = new ListView(getBaseContext());
+			final List<IItemizedOverlay>  overlays = mMapView.getAMMOverlayManager().getOverlays();
+			final OverlayListAdapter adapter = new OverlayListAdapter(
+					MainActivity.this.getBaseContext(), OverlayIconRegistry
+							.getInstance().getRegisteredOverlays(),
+					ListView.CHOICE_MODE_MULTIPLE, overlays);
+			listView.setAdapter(adapter);
+			listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+			listView.setItemsCanFocus(false);
+			for(int i = 0; i < listView.getCount(); i++){
+				AMMItemizedOverlay overlay = (AMMItemizedOverlay)((IItemizedOverlay) overlays.get(i));
+				listView.setItemChecked(i, overlay.isActive());
+			}
+			listView.setOnItemClickListener(new OnItemClickListener() {
+
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					OverlayTypeView item = (OverlayTypeView) adapter.getView(position, view, parent);
+					item.toggle();
+					AMMItemizedOverlay mur = (AMMItemizedOverlay)((IItemizedOverlay) overlays.get(position));
+					mur.setActive(item.isChecked());
+					
+				}
+			});
+
+			return new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.displayed_poi_title).setView(listView)
+					.setCancelable(false)
+					.create();
+		}
+		@Override
+		public void onDismiss(DialogInterface dialog) {
+			super.onDismiss(dialog);
+			mMapView.setOverylays();
+			mMapView.invalidate();
 		}
 	}
 
@@ -293,7 +337,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			CharSequence loc = "Lat: " + location.getLatitude() + "\n Lon: "
 					+ location.getLongitude();
 			Log.d("AMM", "loc: " + loc);
-//			Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
+			// Toast.makeText(MainActivity.this, loc, Toast.LENGTH_LONG).show();
 
 		}
 	};
@@ -309,8 +353,8 @@ public class MainActivity extends Activity implements OnClickListener,
 			}
 			Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 		} else if (v.getId() == R.id.find_me) {
-//			Toast.makeText(this, "centering on device location",
-//					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "centering on device location",
+			// Toast.LENGTH_SHORT).show();
 			mMapView.getController().setCenter(deviceOverlay.getMyLocation());
 		}
 
@@ -338,19 +382,18 @@ public class MainActivity extends Activity implements OnClickListener,
 		}
 		Log.d("status", "over");
 
-		
 		this.mMapView.invalidate();
 	}
-	
-	public void setUIDtoTrack(int UID){
+
+	public void setUIDtoTrack(int UID) {
 		UID_to_track = UID;
 		Log.d("AMM", "tracking UID: " + UID_to_track);
 	}
-	
-	public LocationProvider getLocationProvider(){
+
+	public LocationProvider getLocationProvider() {
 		return provider;
 	}
-	
+
 	@Override
 	public SharedPreferences getSharedPreferences(String name, int mode) {
 		// TODO Auto-generated method stub

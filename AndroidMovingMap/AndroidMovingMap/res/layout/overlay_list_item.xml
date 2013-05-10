@@ -7,13 +7,23 @@
 	<ImageView 
 	    android:id="@+id/overlay_icon"
 	    android:layout_width="wrap_content"
-	    android:layout_height="match_parent"/>
+	    android:layout_height="match_parent"
+	    android:focusable="false"/>
 	
-	<TextView 
+	<CheckedTextView 
 	    android:id="@+id/overlay_text"
 	    android:layout_height="match_parent"
 	    android:layout_width="0dp"
 	    android:layout_weight="1"
 	    android:layout_marginLeft="10sp"
-	    android:textSize="24sp"/>
+	    android:textSize="24sp"
+	    android:checkMark="?android:attr/listChoiceIndicatorMultiple"/>
+<!-- 	<CheckBox
+	    android:id="@+id/checkbox"
+	    android:layout_height="match_parent"
+	    android:layout_width="wrap_content"
+	    android:layout_marginLeft="50sp"
+	    android:visibility="gone"
+	    android:checked="true" 
+	    android:focusable="false"/> -->
 </LinearLayout>

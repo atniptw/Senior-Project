@@ -11,4 +11,5 @@ public interface IItemizedOverlay {
 	public List<POI> getOverlays();
 	public ItemizedOverlay<POI> getHandle();
 	public void addOverlay(POI poi);
+	public boolean isActive();
 }

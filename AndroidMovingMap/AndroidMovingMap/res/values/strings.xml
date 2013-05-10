@@ -22,6 +22,7 @@
     <string name="find_me">Find Me</string>
     <string name="choose_poi_to_display">Choose POI to display</string>
     <string name="poi_spinner_prompt">Choose POI type</string>
+    <string name="displayed_poi_title">Choose which POI types to display</string>
     
 
 </resources>

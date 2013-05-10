@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import edu.rosehulman.overlays.OverlayIconRegistry;
 
@@ -45,7 +46,7 @@ public class AddPOIActivity extends Activity implements Serializable {
 				.getRegisteredOverlays();
 		mTypeSpinner = (Spinner) findViewById(R.id.poi_type_spinner);
 		OverlayListAdapter typeSpinnerAdapter = new OverlayListAdapter(this,
-				poiTypeChoices);
+				poiTypeChoices, ListView.CHOICE_MODE_NONE);
 		mTypeSpinner.setAdapter(typeSpinnerAdapter);
 
 		Button confirmButton = (Button) findViewById(R.id.add_poi_create_btn);

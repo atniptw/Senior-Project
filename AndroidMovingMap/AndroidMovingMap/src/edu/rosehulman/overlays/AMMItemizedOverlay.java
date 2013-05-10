@@ -15,10 +15,12 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import edu.rosehulman.androidmovingmap.MainActivity;
+import edu.rosehulman.androidmovingmap.R;
 import edu.rosehulman.server.POI;
 
 public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListener<POI>{
@@ -31,6 +33,7 @@ public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListen
 	private String mName;
 	private boolean mActive;
 	private Context mContext;
+	private Resources mResources;
 	
 	public AMMItemizedOverlay(Drawable icon, String name,
 			Context context) {
@@ -39,7 +42,7 @@ public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListen
 		mName = name;
 		mActive = true;
 		mContext = context;
-		
+		mResources = mContext.getResources();
 		OverlayIconRegistry.getInstance().registerIcon(name, icon);
 	}
 	
@@ -80,7 +83,9 @@ public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListen
 	}
 	
 	public void setActive(boolean active) {
+		Log.d("AMM", "A:LJKDF:SJEIOJF:LKSDJ      setActive");
 		mActive = active;
+			OverlayIconRegistry.getInstance().registerIcon(mName, mIcon);
 	}
 
 	public boolean onItemLongPress(int arg0, POI item) {
@@ -89,7 +94,6 @@ public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListen
 	}
 
 	public boolean onItemSingleTapUp(int arg0, POI item) {
-		// TODO Auto-generated method stub
 		Log.d("AMM", "I touched something! Wee!");
 		POIinfoDialog mDialog = new POIinfoDialog(item);
 		mDialog.show(((Activity)mContext).getFragmentManager(), "POI info");

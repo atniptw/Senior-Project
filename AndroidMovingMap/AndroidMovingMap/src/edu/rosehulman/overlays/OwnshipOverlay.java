@@ -36,4 +36,9 @@ public class OwnshipOverlay implements IItemizedOverlay {
 
 	}
 
+	public boolean isActive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
