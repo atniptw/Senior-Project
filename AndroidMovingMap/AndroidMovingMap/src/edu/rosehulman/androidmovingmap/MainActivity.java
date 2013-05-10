@@ -187,9 +187,11 @@ public class MainActivity extends Activity implements OnClickListener,
 					POI tempPoint = iter.next();
 					if (tempPoint.getUID() < 0) {
 						try {
-							Server.getInstance().sendMessage(
-									"addPoint:" + tempPoint.toJSONString() + "\n");
-							iter.remove();
+							if (Server.getInstance().sendMessage(
+									"addPoint:" + tempPoint.toJSONString() + "\n"))
+							{
+								iter.remove();
+							}
 						} catch (Exception e) {
 							Log.d("POI", "failed to send POI");
 						}
