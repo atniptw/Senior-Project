@@ -32,13 +32,17 @@ Tom Atnip, Susi Cisneros, Sam Kim, and Seth Troisi}
 \hline
 February 11, 2013 & Document started\\
 \hline
-September 13, 2012 & Wrote Requirements\\
+May 09, 2013 & Update application requirements\\
 \hline
 \end{tabular}
 \clearpage
 
-\section{Introduction}
+\section{Overview}
 This document will provide functional information users of the end system and persons supporting the system.
+
+For our development our map tiles have stored on an Apache server. The server has also been using Python 2.7 to handle connections with the devices, it does not use any non-standard libraries that do not already come with Python on a standard Ubuntu install. 
+
+The Android application running on the devices has a min SDK version or 11, with the target SDK being version 15. The external libraries that were used can be found at https://code.google.com/p/osmdroid/ (OSMDroid) and http://www.slf4j.org/android/ (Logger for OSMDroid)
 
 \section{Customer Feedback}
 
