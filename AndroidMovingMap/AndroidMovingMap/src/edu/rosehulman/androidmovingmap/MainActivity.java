@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -192,6 +193,15 @@ public class MainActivity extends Activity implements OnClickListener,
 						} catch (Exception e) {
 							Log.d("POI", "failed to send POI");
 						}
+					}
+				}
+				for (int UIDToRemove : Server.POIUIDToDelete)
+				{
+					POI tempPoint = new POI(UIDToRemove, "", 0.0, 0.0, "", new TreeMap<String,String>());
+					try {
+						Server.getInstance().sendMessage("removePoint:" + tempPoint.toJSONString() + "\n");
+					} catch (Exception e) {
+						Log.d("POI", "failed to remove UID: " + UIDToRemove);
 					}
 				}
 			}

@@ -17,6 +17,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,10 +57,13 @@ public class Server {
 	public static Map<Integer,POI> POIelements;
   	public static Handler updatePOIHandler;
 
+  	public static ArrayList<Integer> POIUIDToDelete;
+  	
 	private Server()
 	{
 		Server.POIelements = new HashMap<Integer,POI>();
 		GPS = new double[2];
+		Server.POIUIDToDelete = new ArrayList<Integer>();
 	}
 
 	public void setServerAddress(String address)
@@ -299,8 +303,8 @@ public class Server {
 						Log.d("POI", "socket dispatching updateDisplay handler");
 						Server.updatePOIHandler.sendMessage(Server.updatePOIHandler.obtainMessage());
 					}
-
-					// TODO Seth or Sam do this in a different way
+					
+					// TODO Seth or Sam : try and do this in a different way
 					// this was an attempt to flush data we don't have time to parse because it arrives to quickly
 					//byte dst[] = new byte[10000];
 					//in.read(dst);						

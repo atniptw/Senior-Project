@@ -22,6 +22,7 @@ import android.util.Log;
 import edu.rosehulman.androidmovingmap.MainActivity;
 import edu.rosehulman.androidmovingmap.R;
 import edu.rosehulman.server.POI;
+import edu.rosehulman.server.Server;
 
 public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListener<POI>{
 	
@@ -115,6 +116,8 @@ public class AMMItemizedOverlay implements IItemizedOverlay, OnItemGestureListen
 						
 						public void onClick(DialogInterface dialog, int which) {
 							deleteOverlay(mPOI);
+							Server.getInstance();
+							Server.POIUIDToDelete.add(mPOI.getUID());
 						}
 					}).setNeutralButton("Track", new OnClickListener() {
 						
